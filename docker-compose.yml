@@ -1,26 +1,33 @@
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
+    container_name: focusflow_db
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-focusflow}
-      POSTGRES_USER: ${POSTGRES_USER:-focusflow}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-focusflow}
+      POSTGRES_DB: focusflow_dev
+      POSTGRES_USER: focusflow_user
+      POSTGRES_PASSWORD: focusflow_password
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-focusflow} -d ${POSTGRES_DB:-focusflow}"]
+      test: ["CMD-SHELL", "pg_isready -U focusflow_user -d focusflow_dev"]
       interval: 5s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
+    container_name: focusflow_redis
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

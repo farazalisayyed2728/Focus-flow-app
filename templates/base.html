@@ -1,17 +1,25 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FocusFlow</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/site.css' %}">
-  </head>
-  <body>
-    <main>
-      <h1>FocusFlow</h1>
-      <p>Your focus starts here.</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FocusFlow{% endblock %}</title>
+    <!-- HTMX & Alpine.js CDN for initial baseline -->
+    <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+    <script src="https://unpkg.com/alpinejs@3.13.10/dist/cdn.min.js" defer></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="bg-stone-50 text-stone-900 antialiased min-h-screen">
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+
+    <main class="container mx-auto px-4 py-6">
+        {% block content %}{% endblock %}
     </main>
-    <script src="{% static 'js/site.js' %}" defer></script>
-  </body>
+
+    <footer>
+        {% block footer %}{% endblock %}
+    </footer>
+</body>
 </html>

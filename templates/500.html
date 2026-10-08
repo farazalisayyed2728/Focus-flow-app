@@ -1,5 +1,9 @@
-<!doctype html>
-<html lang="en">
-  <head><meta charset="utf-8"><title>Server error | FocusFlow</title></head>
-  <body><main><h1>500: Server error</h1><p>Something went wrong. Please try again later.</p></main></body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Page Not Found — FocusFlow{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto text-center py-16">
+    <h1 class="text-4xl font-bold mb-4">404</h1>
+    <p class="text-stone-600 mb-6">The page you were looking for doesn't exist.</p>
+    <a href="/" class="underline text-stone-900">Return home</a>
+</div>
+{% endblock %}

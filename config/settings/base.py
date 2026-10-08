@@ -11,6 +11,7 @@ sys.path.insert(0, str(BASE_DIR / 'apps'))
 env = environ.Env(
     DJANGO_DEBUG=(bool, False),
     DJANGO_ALLOWED_HOSTS=(list, ['localhost', '127.0.0.1']),
+    DJANGO_EMAIL_BACKEND=(str, 'django.core.mail.backends.smtp.EmailBackend'),
 )
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 

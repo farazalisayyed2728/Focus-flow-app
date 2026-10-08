@@ -1,17 +1,22 @@
-[build-system]
-requires = ["setuptools>=68"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "focusflow"
 version = "0.1.0"
-description = "FocusFlow Django application"
-requires-python = ">=3.11"
+description = "Personal routine, habit, and productivity web app"
+readme = "README.md"
+requires-python = ">=3.12"
 dependencies = [
-    "Django>=5.1,<6.0",
-    "celery[redis]>=5.4,<6.0",
-    "psycopg[binary]>=3.2,<4.0",
+    "django>=5.1,<6.2",
+    "psycopg[binary]>=3.1.18",
+    "redis>=5.0.3",
+    "celery>=5.3.6",
+    "django-environ>=0.11.2",
+    "djangorestframework>=3.15.1",
+    "whitenoise>=6.6.0",
 ]
 
-[tool.setuptools.packages.find]
-include = ["config*", "apps*"]
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.1.1",
+    "pytest-django>=4.8.0",
+    "ruff>=0.3.4",
+]

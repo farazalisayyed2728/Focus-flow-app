@@ -1,0 +1,20 @@
+<aside class="desktop-sidebar hidden md:flex flex-col w-64 border-r border-stone-200 p-4 justify-between" style="border-color: var(--border); background-color: var(--surface);">
+  <div class="space-y-6">
+    <div class="flex items-center gap-2 px-2 py-3">
+      <span class="w-4 h-4 rounded-full" style="background-color: var(--accent);"></span>
+      <span class="text-xl font-bold tracking-tight">FocusFlow</span>
+    </div>
+    <nav class="space-y-1">
+      <a href="/" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-stone-100" style="color: var(--text);">Home</a>
+      <a href="/today/" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-stone-100" style="color: var(--text);">Today</a>
+      <a href="/habits/" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-stone-100" style="color: var(--text);">Habits</a>
+      <a href="/routines/" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-stone-100" style="color: var(--text);">Routines</a>
+      <a href="/analytics/" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-stone-100" style="color: var(--text);">Analytics</a>
+    </nav>
+  </div>
+  <div class="pt-4 border-t" style="border-color: var(--border);">
+    <button @click="toggleTheme()" class="btn btn-secondary w-full text-xs">
+      Toggle Light / Dark
+    </button>
+  </div>
+</aside>

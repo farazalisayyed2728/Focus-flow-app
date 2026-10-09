@@ -3,8 +3,15 @@ from django.db import connection
 from django.core.cache import cache
 from django.http import JsonResponse
 from django.views import View
+from django.shortcuts import render
 
 logger = logging.getLogger(__name__)
+
+
+def shell_preview(request):
+    return render(request, "shell_preview.html")
+
+
 
 class HealthCheckView(View):
     def get(self, request, *args, **kwargs):

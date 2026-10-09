@@ -1,0 +1,17 @@
+<div x-data="{ 
+       toasts: [],
+       addToast(message, type = 'info') {
+         const id = Date.now();
+         this.toasts.push({ id, message, type });
+         setTimeout(() => { this.toasts = this.toasts.filter(t => t.id !== id) }, 4000);
+       }
+     }"
+     @show-toast.window="addToast($event.detail.message, $event.detail.type)"
+     class="fixed bottom-20 md:bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none">
+  <template x-for="toast in toasts" :key="toast.id">
+    <div class="card pointer-events-auto shadow-md text-sm py-2 px-4 transition-all"
+         :style="toast.type === 'error' ? 'border-color: var(--danger);' : 'border-color: var(--accent);'">
+      <span x-text="toast.message"></span>
+    </div>
+  </template>
+</div>

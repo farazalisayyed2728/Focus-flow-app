@@ -1,0 +1,20 @@
+<nav class="md:hidden fixed bottom-0 left-0 right-0 border-t flex justify-around items-center h-16 px-2 z-40" style="background-color: var(--surface); border-color: var(--border);">
+  <a href="/" class="flex flex-col items-center text-xs" style="color: var(--text);">
+    <span>Home</span>
+  </a>
+  <a href="/today/" class="flex flex-col items-center text-xs" style="color: var(--text);">
+    <span>Today</span>
+  </a>
+  
+  <!-- Quick Action Floating Button -->
+  <button @click="$dispatch('open-quick-add')" class="w-12 h-12 rounded-full -mt-6 flex items-center justify-center text-white text-2xl shadow-lg border-2 border-white" style="background-color: var(--accent);" aria-label="Quick Add">
+    +
+  </button>
+  
+  <a href="/habits/" class="flex flex-col items-center text-xs" style="color: var(--text);">
+    <span>Habits</span>
+  </a>
+  <a href="/analytics/" class="flex flex-col items-center text-xs" style="color: var(--text);">
+    <span>Analytics</span>
+  </a>
+</nav>

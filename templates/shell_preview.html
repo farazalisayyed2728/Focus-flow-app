@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Design System Shell Preview — FocusFlow{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <header class="mb-6">
+        <h1 class="text-3xl font-bold tracking-tight">Design System & App Shell</h1>
+        <p style="color: var(--text-muted);">Verification canvas for tokens, cards, buttons, and navigation.</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="card">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-semibold">Card & Pills</h2>
+                <span class="pill pill-accent">Active Block</span>
+            </div>
+            <p style="color: var(--text-muted);" class="text-sm mb-4">
+                Card design features subtle borders and smooth elevation without excessive drop shadows.
+            </p>
+            <div class="flex gap-2">
+                <button class="btn btn-primary" @click="$dispatch('show-toast', { message: 'Routine saved!', type: 'success' })">
+                    Primary Action
+                </button>
+                <button class="btn btn-secondary" @click="$dispatch('show-toast', { message: 'Action discarded', type: 'error' })">
+                    Secondary
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="text-lg font-semibold mb-3">Input Controls</h2>
+            <div class="space-y-3">
+                <input type="text" class="input" placeholder="e.g. 08:30 Deep Work" aria-label="Block Title">
+                <div class="flex gap-2">
+                    <span class="pill">Study</span>
+                    <span class="pill">Work</span>
+                    <span class="pill">Health</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

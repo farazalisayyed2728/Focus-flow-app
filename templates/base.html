@@ -1,25 +1,42 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="{ 
+    theme: localStorage.getItem('focusflow_theme') || 'system',
+    initTheme() {
+        const activeTheme = this.theme === 'system' 
+            ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : this.theme;
+        document.documentElement.setAttribute('data-theme', activeTheme);
+    },
+    toggleTheme() {
+        this.theme = this.theme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('focusflow_theme', this.theme);
+        this.initTheme();
+    }
+}" x-init="initTheme()">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}FocusFlow{% endblock %}</title>
-    <!-- HTMX & Alpine.js CDN for initial baseline -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- Alpine.js & HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
     <script src="https://unpkg.com/alpinejs@3.13.10/dist/cdn.min.js" defer></script>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body class="bg-stone-50 text-stone-900 antialiased min-h-screen">
-    <header>
-        {% block header %}{% endblock %}
-    </header>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <div class="app-container">
+        {% include "components/sidebar.html" %}
 
-    <main class="container mx-auto px-4 py-6">
-        {% block content %}{% endblock %}
-    </main>
+        <div class="flex-1 flex flex-col min-w-0">
+            <main class="main-content">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
 
-    <footer>
-        {% block footer %}{% endblock %}
-    </footer>
+        {% include "components/mobile_nav.html" %}
+    </div>
+
+    {% include "components/toast.html" %}
 </body>
 </html>

@@ -1,0 +1,47 @@
+<div id="block-row-{{ block.id }}" class="card flex flex-col md:flex-row md:items-center justify-between gap-3 {% if is_overlap %}border-yellow-500 border-2{% endif %}">
+    <div class="flex items-center gap-4">
+        <div class="w-16 text-center">
+            <span class="text-sm font-bold block">{{ block.start_time|time:"H:i" }}</span>
+            <span class="text-xs text-stone-400 block">{{ block.end_time|time:"H:i" }}</span>
+        </div>
+
+        <div>
+            <div class="flex items-center gap-2">
+                <h3 class="font-semibold text-sm">{{ block.title }}</h3>
+                <span class="pill text-xs">{{ block.category }}</span>
+                {% if is_overlap %}
+                    <span class="pill pill-accent text-xs" title="Overlaps with another block">⚠️ Overlap</span>
+                {% endif %}
+            </div>
+            {% if block.notes %}
+                <p class="text-xs text-stone-500 mt-0.5">{{ block.notes }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="flex items-center gap-2 text-xs">
+        <span class="text-stone-400 mr-2">{{ block.duration_minutes }} min</span>
+
+        <button hx-get="{% url 'routine-block-update' block.id %}"
+                hx-target="#modal-body"
+                @click="openModal = true"
+                class="btn btn-secondary py-1 px-2.5 text-xs">
+            Edit
+        </button>
+
+        <button hx-post="{% url 'routine-block-duplicate' block.id %}"
+                hx-target="#block-list"
+                hx-swap="beforeend"
+                class="btn btn-secondary py-1 px-2.5 text-xs">
+            Duplicate
+        </button>
+
+        <button hx-post="{% url 'routine-block-delete' block.id %}"
+                hx-target="#block-row-{{ block.id }}"
+                hx-swap="outerHTML"
+                hx-confirm="Are you sure you want to delete this block?"
+                class="btn btn-secondary py-1 px-2.5 text-xs text-red-600 hover:border-red-500">
+            Delete
+        </button>
+    </div>
+</div>

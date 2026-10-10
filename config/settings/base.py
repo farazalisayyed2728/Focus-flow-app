@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     # Local domain apps
     'apps.core.apps.CoreConfig',
     'apps.accounts.apps.AccountsConfig',
+    'apps.routines.apps.RoutinesConfig',
 ]
 
 LOGIN_URL = 'login'

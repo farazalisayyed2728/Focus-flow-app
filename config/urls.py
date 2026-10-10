@@ -7,4 +7,5 @@ urlpatterns = [
     path('health/', HealthCheckView.as_view(), name='health-check'),
     path('design-system/', shell_preview, name='design-system-preview'),
     path('', include('apps.accounts.urls')),
+    path('routines/', include('apps.routines.urls')),
 ]

@@ -32,7 +32,12 @@ INSTALLED_APPS = [
 
     # Local domain apps
     'apps.core.apps.CoreConfig',
+    'apps.accounts.apps.AccountsConfig',
 ]
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'login'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

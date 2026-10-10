@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — FocusFlow{% endblock %}
+
+{% block content %}
+<div class="space-y-4">
+    <h1 class="text-3xl font-bold">Good day, {{ user.profile.display_name|default:user.username }}</h1>
+    <p style="color: var(--text-muted);">Welcome to your command center.</p>
+</div>
+{% endblock %}

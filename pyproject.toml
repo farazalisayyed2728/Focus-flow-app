@@ -23,3 +23,8 @@ dev = [
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings.development"
+
+
+[tool.setuptools.packages.find]
+include = ["apps*", "config*"]
+exclude = ["static*", "templates*", "tests*"]

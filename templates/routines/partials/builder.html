@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Routine Builder — FocusFlow{% endblock %}
+
+{% block content %}
+<div class="space-y-6 max-w-4xl mx-auto" x-data="{ openModal: false }">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight">{{ routine.name }}</h1>
+            <p style="color: var(--text-muted);" class="text-xs">Design and customize your day block-by-block.</p>
+        </div>
+
+        <button hx-get="{% url 'routine-block-create' %}"
+                hx-target="#modal-body"
+                @click="openModal = true"
+                class="btn btn-primary text-xs">
+            + Add Block
+        </button>
+    </div>
+
+    <!-- Routine Block List -->
+    <div id="block-list" class="space-y-3">
+        {% for block in blocks %}
+            {% include "routines/partials/block_row.html" with block=block is_overlap=block.id in overlapping_ids %}
+        {% empty %}
+            <div class="card text-center py-10" style="color: var(--text-muted);">
+                <p class="text-sm font-medium">Your routine is blank.</p>
+                <p class="text-xs mt-1">Add your first block to schedule your day.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Generic Modal for Block Add/Edit -->
+    <div x-show="openModal" 
+         x-cloak
+         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+        <div class="card w-full max-w-lg shadow-xl" @click.away="openModal = false">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-sm font-bold">Routine Time Block</h2>
+                <button @click="openModal = false" class="text-stone-400 hover:text-stone-700 text-lg">&times;</button>
+            </div>
+            <div id="modal-body">
+                <!-- HTMX will inject block_form.html here -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

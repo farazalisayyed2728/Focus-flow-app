@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Setup Your Routine — FocusFlow{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto my-8">
+    <div class="card space-y-6">
+        <div>
+            <span class="pill pill-accent text-xs">Step 1 of 1</span>
+            <h1 class="text-2xl font-bold mt-2">Personalize Your Flow</h1>
+            <p style="color: var(--text-muted);" class="text-sm">Set your rhythm and pick a template or start blank.</p>
+        </div>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label class="block text-sm font-medium mb-1">Display Name</label>
+                {{ form.display_name }}
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Wake Time</label>
+                    {{ form.typical_wake_time }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Sleep Time</label>
+                    {{ form.typical_sleep_time }}
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Timezone</label>
+                {{ form.timezone }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Main Focus / Goal</label>
+                {{ form.main_goal }}
+            </div>
+
+            <div class="pt-4 border-t" style="border-color: var(--border);">
+                <label class="block text-sm font-medium mb-2">Routine Starter Template</label>
+                <div class="space-y-2">
+                    {{ form.template_choice }}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full mt-6">Finish & Go to Dashboard</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

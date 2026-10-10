@@ -1,0 +1,46 @@
+<form hx-post="{% if block %}{% url 'routine-block-update' block.id %}{% else %}{% url 'routine-block-create' %}{% endif %}"
+      hx-target="{% if block %}#block-row-{{ block.id }}{% else %}#block-list{% endif %}"
+      hx-swap="{% if block %}outerHTML{% else %}beforeend{% endif %}"
+      @htmx:after-request="if($event.detail.successful) { openModal = false; }"
+      class="space-y-4">
+    {% csrf_token %}
+    <div>
+        <label class="block text-xs font-semibold mb-1">Title</label>
+        {{ form.title }}
+        {% if form.title.errors %}<p class="text-xs text-red-500 mt-1">{{ form.title.errors.0 }}</p>{% endif %}
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+        <div>
+            <label class="block text-xs font-semibold mb-1">Category</label>
+            {{ form.category }}
+        </div>
+        <div class="flex items-center gap-2 pt-5">
+            {{ form.is_active }}
+            <label class="text-xs font-medium">Active in Routine</label>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+        <div>
+            <label class="block text-xs font-semibold mb-1">Start Time</label>
+            {{ form.start_time }}
+            {% if form.start_time.errors %}<p class="text-xs text-red-500 mt-1">{{ form.start_time.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+            <label class="block text-xs font-semibold mb-1">End Time</label>
+            {{ form.end_time }}
+            {% if form.end_time.errors %}<p class="text-xs text-red-500 mt-1">{{ form.end_time.errors.0 }}</p>{% endif %}
+        </div>
+    </div>
+
+    <div>
+        <label class="block text-xs font-semibold mb-1">Notes (Optional)</label>
+        {{ form.notes }}
+    </div>
+
+    <div class="flex justify-end gap-2 pt-2">
+        <button type="button" @click="openModal = false" class="btn btn-secondary text-xs">Cancel</button>
+        <button type="submit" class="btn btn-primary text-xs">Save Block</button>
+    </div>
+</form>

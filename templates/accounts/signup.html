@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up — FocusFlow{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto my-12">
+    <div class="card space-y-6">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight">Create your account</h1>
+            <p style="color: var(--text-muted);" class="text-sm">Start building your calm routine.</p>
+        </div>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="text-xs text-red-500 mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary w-full mt-4">Sign Up</button>
+        </form>
+
+        <p class="text-xs text-center" style="color: var(--text-muted);">
+            Already have an account? <a href="{% url 'login' %}" class="underline font-semibold" style="color: var(--accent);">Log In</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

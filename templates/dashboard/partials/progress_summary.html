@@ -1,0 +1,17 @@
+<div id="progress-summary-card" class="card" hx-swap-oob="true">
+    <div class="flex items-center justify-between mb-2">
+        <h2 class="text-sm font-semibold">Today's Progress</h2>
+        <span class="text-xs font-bold" style="color: var(--accent);">{{ completion_pct }}%</span>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div class="w-full h-2 rounded-full mb-3" style="background-color: var(--surface-muted);">
+        <div class="h-2 rounded-full transition-all duration-300" 
+             style="background-color: var(--accent); width: {{ completion_pct }}%;"></div>
+    </div>
+
+    <div class="flex justify-between text-xs" style="color: var(--text-muted);">
+        <span>Completed: {{ completed_minutes }}m</span>
+        <span>Planned: {{ planned_minutes }}m</span>
+    </div>
+</div>

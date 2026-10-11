@@ -1,0 +1,43 @@
+<form hx-post="{% url 'habit-create' %}"
+      hx-target="#habit-grid"
+      hx-swap="beforeend"
+      @htmx:after-request="if($event.detail.successful) { openModal = false; }"
+      class="space-y-4">
+    {% csrf_token %}
+    <div>
+        <label class="block text-xs font-semibold mb-1">Habit Name</label>
+        {{ form.name }}
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+        <div>
+            <label class="block text-xs font-semibold mb-1">Category</label>
+            {{ form.category }}
+        </div>
+        <div>
+            <label class="block text-xs font-semibold mb-1">Frequency</label>
+            {{ form.frequency_type }}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+        <div>
+            <label class="block text-xs font-semibold mb-1">Target Value</label>
+            {{ form.target_value }}
+        </div>
+        <div>
+            <label class="block text-xs font-semibold mb-1">Unit</label>
+            {{ form.unit }}
+        </div>
+    </div>
+
+    <div>
+        <label class="block text-xs font-semibold mb-1">Description (Optional)</label>
+        {{ form.description }}
+    </div>
+
+    <div class="flex justify-end gap-2 pt-2">
+        <button type="button" @click="openModal = false" class="btn btn-secondary text-xs">Cancel</button>
+        <button type="submit" class="btn btn-primary text-xs">Create Habit</button>
+    </div>
+</form>

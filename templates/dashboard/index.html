@@ -1,10 +1,72 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard — FocusFlow{% endblock %}
+{% block title %}Today — FocusFlow{% endblock %}
 
 {% block content %}
-<div class="space-y-4">
-    <h1 class="text-3xl font-bold">Good day, {{ user.profile.display_name|default:user.username }}</h1>
-    <p style="color: var(--text-muted);">Welcome to your command center.</p>
+<div class="space-y-6 max-w-4xl mx-auto">
+    <!-- Header Greeting -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight">
+                Good day, {{ user.profile.display_name|default:user.username }}
+            </h1>
+            <p style="color: var(--text-muted);" class="text-xs">
+                Build your day. One block at a time.
+            </p>
+        </div>
+        <div class="text-xs font-semibold px-3 py-1.5 rounded-lg border self-start md:self-auto" style="border-color: var(--border);">
+            {{ timeline_data.target_date|date:"l, d M Y" }}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Progress Summary Card -->
+        {% include "dashboard/partials/progress_summary.html" with completion_pct=timeline_data.completion_pct planned_minutes=timeline_data.planned_minutes completed_minutes=timeline_data.completed_minutes %}
+
+        <!-- Active Block Card -->
+        <div class="card">
+            <span class="text-xs font-semibold block mb-1" style="color: var(--text-muted);">CURRENT ACTIVE</span>
+            {% if timeline_data.active_block %}
+                <h3 class="text-base font-bold">{{ timeline_data.active_block.title }}</h3>
+                <p class="text-xs mt-1" style="color: var(--accent);">
+                    {{ timeline_data.active_block.start_time|time:"H:i" }} - {{ timeline_data.active_block.end_time|time:"H:i" }}
+                </p>
+            {% else %}
+                <p class="text-xs text-stone-400 mt-2">No active block right now.</p>
+            {% endif %}
+        </div>
+
+        <!-- Next Up Card -->
+        <div class="card">
+            <span class="text-xs font-semibold block mb-1" style="color: var(--text-muted);">NEXT UP</span>
+            {% if timeline_data.next_block %}
+                <h3 class="text-base font-bold">{{ timeline_data.next_block.title }}</h3>
+                <p class="text-xs mt-1" style="color: var(--text-muted);">
+                    Starts at {{ timeline_data.next_block.start_time|time:"H:i" }}
+                </p>
+            {% else %}
+                <p class="text-xs text-stone-400 mt-2">You're all caught up for today!</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Timeline Checklist -->
+    <div class="space-y-3">
+        <div class="flex items-center justify-between">
+            <h2 class="text-sm font-bold uppercase tracking-wider" style="color: var(--text-muted);">Today's Schedule</h2>
+            <a href="{% url 'routine-builder' %}" class="text-xs underline" style="color: var(--accent);">Edit Routine</a>
+        </div>
+
+        <div class="space-y-2">
+            {% for item in timeline_data.timeline %}
+                {% include "dashboard/partials/occurrence_row.html" with item=item %}
+            {% empty %}
+                <div class="card text-center py-8" style="color: var(--text-muted);">
+                    <p class="text-sm">No scheduled routine blocks for today.</p>
+                    <a href="{% url 'routine-builder' %}" class="btn btn-primary text-xs mt-3">Add Blocks</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}

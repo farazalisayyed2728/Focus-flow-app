@@ -9,4 +9,5 @@ urlpatterns = [
     path('routines/', include('apps.routines.urls')),
     path('dashboard/', include('apps.dashboard.urls')),
     path('', include('apps.accounts.urls')),
+    path('habits/', include('apps.habits.urls')),
 ]

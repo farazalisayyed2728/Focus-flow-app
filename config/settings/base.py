@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'apps.routines.apps.RoutinesConfig',
     'apps.tracking.apps.TrackingConfig',
     'apps.dashboard.apps.DashboardConfig',
+    'apps.habits.apps.HabitsConfig',
 ]
 
 LOGIN_URL = 'login'

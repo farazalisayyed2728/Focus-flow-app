@@ -1,0 +1,38 @@
+<div id="occ-row-{{ item.occurrence.id }}" 
+     class="card flex items-center justify-between gap-4 transition-all {% if item.occurrence.status == 'completed' %}opacity-75 bg-stone-50/50{% endif %} {% if item.is_current %}border-2 border-orange-500 shadow-md{% endif %}">
+    
+    <div class="flex items-center gap-3">
+        <!-- Quick Complete Checkbox -->
+        <button hx-post="{% url 'toggle-occurrence' item.occurrence.id %}"
+                hx-target="#occ-row-{{ item.occurrence.id }}"
+                hx-swap="outerHTML"
+                class="w-7 h-7 rounded-full flex items-center justify-center border transition-colors cursor-pointer"
+                style="{% if item.occurrence.status == 'completed' %}background-color: var(--accent); border-color: var(--accent); color: white;{% else %}border-color: var(--border);{% endif %}"
+                aria-label="Toggle Complete">
+            {% if item.occurrence.status == 'completed' %}✓{% endif %}
+        </button>
+
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="text-sm font-semibold {% if item.occurrence.status == 'completed' %}line-through text-stone-400{% endif %}">
+                    {{ item.block.title }}
+                </span>
+                <span class="pill text-xs">{{ item.block.category }}</span>
+                {% if item.is_current %}
+                    <span class="pill pill-accent text-xs">Active Now</span>
+                {% endif %}
+            </div>
+            <p class="text-xs" style="color: var(--text-muted);">
+                {{ item.block.start_time|time:"H:i" }} - {{ item.block.end_time|time:"H:i" }} ({{ item.block.duration_minutes }}m)
+            </p>
+        </div>
+    </div>
+
+    <div class="text-xs">
+        <span class="pill">{{ item.occurrence.get_status_display }}</span>
+    </div>
+</div>
+
+{% if swap_summary %}
+    {% include "dashboard/partials/progress_summary.html" with completion_pct=completion_pct planned_minutes=planned_minutes completed_minutes=completed_minutes %}
+{% endif %}

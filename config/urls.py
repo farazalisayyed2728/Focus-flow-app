@@ -8,4 +8,5 @@ urlpatterns = [
     path('design-system/', shell_preview, name='design-system-preview'),
     path('', include('apps.accounts.urls')),
     path('routines/', include('apps.routines.urls')),
+    path('dashboard/', include('apps.dashboard.urls')),
 ]

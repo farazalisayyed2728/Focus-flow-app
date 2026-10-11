@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     'apps.core.apps.CoreConfig',
     'apps.accounts.apps.AccountsConfig',
     'apps.routines.apps.RoutinesConfig',
+    'apps.tracking.apps.TrackingConfig',
+    'apps.dashboard.apps.DashboardConfig',
 ]
 
 LOGIN_URL = 'login'

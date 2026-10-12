@@ -1,0 +1,16 @@
+<div class="py-2">
+    <div class="px-3 pb-2 border-b flex justify-between items-center" style="border-color: var(--border);">
+        <span class="text-xs font-bold">Notifications</span>
+        <span class="text-[10px] text-stone-400">{{ unread_count }} unread</span>
+    </div>
+
+    <div class="max-h-64 overflow-y-auto">
+        {% for notif in notifications %}
+            {% include "notifications/partials/notif_item.html" with notif=notif %}
+        {% empty %}
+            <div class="p-6 text-center text-xs text-stone-400">
+                No notifications yet.
+            </div>
+        {% endfor %}
+    </div>
+</div>

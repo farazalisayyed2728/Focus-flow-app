@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'apps.tracking.apps.TrackingConfig',
     'apps.dashboard.apps.DashboardConfig',
     'apps.habits.apps.HabitsConfig',
+    'apps.notifications.apps.NotificationsConfig',
+    'apps.reminders.apps.RemindersConfig',
 ]
 
 LOGIN_URL = 'login'

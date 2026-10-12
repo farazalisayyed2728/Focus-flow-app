@@ -12,4 +12,5 @@ urlpatterns = [
     path('habits/', include('apps.habits.urls')),
     path('notifications/', include('apps.notifications.urls')),
     path('reminders/', include('apps.reminders.urls')),
+    path('analytics/', include('apps.analytics.urls')),
 ]

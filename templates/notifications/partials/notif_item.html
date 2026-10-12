@@ -1,0 +1,19 @@
+<div id="notif-item-{{ notif.id }}" class="p-3 border-b text-xs flex justify-between items-start gap-2 {% if not notif.is_read %}bg-orange-50/40{% endif %}" style="border-color: var(--border);">
+    <div>
+        <p class="font-semibold text-stone-900">{{ notif.title }}</p>
+        <p class="text-stone-500 mt-0.5">{{ notif.body }}</p>
+        <span class="text-[10px] text-stone-400 mt-1 block">{{ notif.delivered_at|timesince }} ago</span>
+    </div>
+    {% if not notif.is_read %}
+        <button hx-post="{% url 'notification-mark-read' notif.id %}"
+                hx-target="#notif-item-{{ notif.id }}"
+                hx-swap="outerHTML"
+                class="text-[10px] font-semibold text-orange-600 hover:underline shrink-0">
+            Mark Read
+        </button>
+    {% endif %}
+</div>
+
+{% if swap_badge %}
+    <span id="notif-badge" hx-swap-oob="true" class="{% if unread_count > 0 %}w-2 h-2 rounded-full bg-orange-600 inline-block{% else %}hidden{% endif %}"></span>
+{% endif %}

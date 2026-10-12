@@ -18,3 +18,23 @@
     </button>
   </div>
 </aside>
+
+<div class="relative" x-data="{ openTray: false }">
+  <button @click="openTray = !openTray" 
+          hx-get="{% url 'notification-tray' %}" 
+          hx-target="#tray-dropdown"
+          class="flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm font-medium hover:bg-stone-100" 
+          style="color: var(--text);">
+    <div class="flex items-center gap-2">
+      <span>🔔 Alerts</span>
+      <span id="notif-badge" hx-get="{% url 'notification-unread-count' %}" hx-trigger="load" hx-swap="outerHTML"></span>
+    </div>
+  </button>
+
+  <div id="tray-dropdown" 
+       x-show="openTray" 
+       @click.away="openTray = false" 
+       x-cloak 
+       class="absolute left-0 bottom-12 w-64 card shadow-xl z-50 p-0 overflow-hidden">
+  </div>
+</div>

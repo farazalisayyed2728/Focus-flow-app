@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'apps.habits.apps.HabitsConfig',
     'apps.notifications.apps.NotificationsConfig',
     'apps.reminders.apps.RemindersConfig',
+    'apps.analytics.apps.AnalyticsConfig',
 ]
 
 LOGIN_URL = 'login'

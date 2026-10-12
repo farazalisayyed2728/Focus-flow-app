@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Weekly Analytics — FocusFlow{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    {% include "analytics/partials/weekly_stats.html" with metrics=metrics %}
+</div>
+{% endblock %}

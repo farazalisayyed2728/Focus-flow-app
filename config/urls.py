@@ -10,4 +10,6 @@ urlpatterns = [
     path('dashboard/', include('apps.dashboard.urls')),
     path('', include('apps.accounts.urls')),
     path('habits/', include('apps.habits.urls')),
+    path('notifications/', include('apps.notifications.urls')),
+    path('reminders/', include('apps.reminders.urls')),
 ]

@@ -6,6 +6,8 @@ from .models import Notification
 from .services import mark_notification_read
 
 
+
+
 @login_required
 def notification_tray(request):
     notifications = Notification.objects.filter(user=request.user)[:10]
@@ -30,5 +32,7 @@ def notification_mark_read(request, notif_id):
 
 @login_required
 def notification_unread_count(request):
+    if not request.user.is_authenticated:
+        return HttpResponse("")
     unread_count = Notification.objects.filter(user=request.user, is_read=False).count()
     return render(request, 'notifications/partials/badge.html', {'unread_count': unread_count})

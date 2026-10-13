@@ -1,6 +1,7 @@
-from django.db import models
-from django.contrib.auth.models import User
 import zoneinfo
+
+from django.contrib.auth.models import User
+from django.db import models
 
 # Common timezones fallback
 TIMEZONE_CHOICES = [(tz, tz) for tz in sorted(zoneinfo.available_timezones())]

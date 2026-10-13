@@ -1,7 +1,8 @@
 from datetime import date, timedelta
-from django.db.models import Sum
-from apps.tracking.models import ScheduleOccurrence
+
 from apps.habits.models import Habit, HabitOccurrence
+from apps.tracking.models import ScheduleOccurrence
+
 
 def calculate_weekly_metrics(user, ref_date=None):
     """
@@ -81,14 +82,41 @@ def calculate_weekly_metrics(user, ref_date=None):
     ]
 
     # 4. Habit Consistency for the week
-    habits = Habit.objects.filter(user=user, is_archived=False)
+    habits = list(
+        Habit.objects.filter(user=user, is_archived=False, is_paused=False)
+        .values('id', 'frequency_type', 'target_value')
+    )
+    habits_by_id = {habit['id']: habit for habit in habits}
+    habit_ids = list(habits_by_id)
     habit_occurrences = HabitOccurrence.objects.filter(
         user=user,
+        habit_id__in=habit_ids,
         occurrence_date__range=(start_of_week, end_of_week),
-        status='completed'
-    )
-    total_habit_checks = habit_occurrences.count()
-    expected_habit_checks = habits.count() * 7
+        status='completed',
+    ).values_list('habit_id', 'occurrence_date')
+
+    completed_by_habit = {habit_id: 0 for habit_id in habit_ids}
+    for habit_id, occurrence_date in habit_occurrences:
+        habit = habits_by_id[habit_id]
+        if (
+            habit['frequency_type'] != Habit.FREQUENCY_WEEKDAYS
+            or occurrence_date.weekday() < 5
+        ):
+            completed_by_habit[habit_id] += 1
+
+    expected_habit_checks = 0
+    total_habit_checks = 0
+    for habit in habits:
+        if habit['frequency_type'] == Habit.FREQUENCY_WEEKDAYS:
+            expected_checks = 5
+        elif habit['frequency_type'] == Habit.FREQUENCY_WEEKLY:
+            expected_checks = habit['target_value']
+        else:
+            expected_checks = 7
+
+        expected_habit_checks += expected_checks
+        total_habit_checks += min(completed_by_habit[habit['id']], expected_checks)
+
     habit_rate = int((total_habit_checks / expected_habit_checks) * 100) if expected_habit_checks > 0 else 0
 
     return {
@@ -104,5 +132,5 @@ def calculate_weekly_metrics(user, ref_date=None):
         'days_data': days_data,
         'category_summary': category_summary,
         'habit_rate': habit_rate,
-        'habits_count': habits.count(),
+        'habits_count': len(habits),
     }

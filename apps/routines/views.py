@@ -1,9 +1,15 @@
-from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from .models import RoutineBlock
+from django.shortcuts import get_object_or_404, render
+
 from .forms import RoutineBlockForm
-from .services import get_or_create_default_routine, find_overlapping_blocks, duplicate_routine_block
+from .models import RoutineBlock
+from .services import (
+    duplicate_routine_block,
+    find_overlapping_blocks,
+    get_or_create_default_routine,
+)
+
 
 @login_required
 def routine_builder(request):

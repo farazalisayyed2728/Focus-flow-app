@@ -1,14 +1,18 @@
+from datetime import timedelta
+
 import pytest
-from datetime import time, timedelta
-from django.utils import timezone
-from django.urls import reverse
 from django.contrib.auth.models import User
-from apps.routines.models import Routine, RoutineBlock
-from apps.habits.models import Habit
-from apps.reminders.models import Reminder
+from django.utils import timezone
+
 from apps.notifications.models import Notification, NotificationPreference
-from apps.notifications.services import create_in_app_notification, mark_notification_read
+from apps.notifications.services import (
+    create_in_app_notification,
+    mark_notification_read,
+)
+from apps.reminders.models import Reminder
 from apps.reminders.tasks import check_and_dispatch_reminders
+from apps.routines.models import Routine, RoutineBlock
+
 
 @pytest.mark.django_db
 def test_create_and_read_notification():
@@ -29,7 +33,7 @@ def test_create_and_read_notification():
 @pytest.mark.django_db
 def test_notification_preference_suppression():
     user = User.objects.create_user(username='pref_user', password='Password123!')
-    prefs = NotificationPreference.objects.create(user=user, routine_reminders_enabled=False)
+    NotificationPreference.objects.create(user=user, routine_reminders_enabled=False)
 
     notif = create_in_app_notification(
         user=user,

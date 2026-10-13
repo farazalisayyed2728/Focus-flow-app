@@ -1,10 +1,17 @@
 from datetime import date
-from django.shortcuts import render, get_object_or_404
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from .models import Habit, HabitOccurrence
+from django.shortcuts import get_object_or_404, render
+
 from .forms import HabitForm
-from .services import calculate_habit_streak, toggle_habit_status, get_habit_week_history
+from .models import Habit, HabitOccurrence
+from .services import (
+    calculate_habit_streak,
+    get_habit_week_history,
+    toggle_habit_status,
+)
+
 
 def _habit_card_context(habit, today):
     today_occ = HabitOccurrence.objects.filter(habit=habit, occurrence_date=today).first()

@@ -1,6 +1,8 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+
 from apps.routines.models import RoutineBlock
+
 
 class ScheduleOccurrence(models.Model):
     STATUS_CHOICES = [

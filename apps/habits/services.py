@@ -1,6 +1,9 @@
 from datetime import date, timedelta
+
 from django.utils import timezone
+
 from .models import Habit, HabitOccurrence
+
 
 def calculate_habit_streak(habit, ref_date=None):
     """

@@ -1,9 +1,12 @@
+from datetime import date, time
+
 import pytest
-from datetime import time, date
-from django.urls import reverse
 from django.contrib.auth.models import User
+from django.urls import reverse
+
 from apps.routines.models import Routine, RoutineBlock
 from apps.tracking.models import ScheduleOccurrence
+
 
 @pytest.mark.django_db
 def test_dashboard_renders_schedule_and_toggles(client):

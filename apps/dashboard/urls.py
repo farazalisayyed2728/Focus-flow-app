@@ -1,4 +1,5 @@
 from django.urls import path
+
 from .views import dashboard_view, toggle_block_completion
 
 urlpatterns = [

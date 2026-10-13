@@ -1,8 +1,10 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm, OnboardingForm
+from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import redirect, render
+
+from .forms import OnboardingForm, SignUpForm
+
 
 def signup_view(request):
     if request.user.is_authenticated:

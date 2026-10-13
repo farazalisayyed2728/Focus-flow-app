@@ -1,10 +1,14 @@
-import pytest
 from datetime import date, time, timedelta
-from django.urls import reverse
+
+import pytest
 from django.contrib.auth.models import User
+from django.urls import reverse
+
+from apps.analytics.services import calculate_weekly_metrics
+from apps.habits.models import Habit, HabitOccurrence
 from apps.routines.models import Routine, RoutineBlock
 from apps.tracking.models import ScheduleOccurrence
-from apps.analytics.services import calculate_weekly_metrics
+
 
 @pytest.mark.django_db
 def test_weekly_metrics_calculation(client):
@@ -50,3 +54,56 @@ def test_weekly_metrics_calculation(client):
     response = client.get(url)
     assert response.status_code == 200
     assert 'Weekly Review' in response.content.decode('utf-8')
+
+
+@pytest.mark.django_db
+def test_habit_consistency_respects_frequency_and_active_habits():
+    user = User.objects.create_user(username='habit_analytics_user', password='Password123!')
+    today = date.today()
+    start_of_week = today - timedelta(days=today.weekday())
+
+    daily = Habit.objects.create(user=user, name='Daily', frequency_type=Habit.FREQUENCY_DAILY)
+    weekdays = Habit.objects.create(user=user, name='Weekdays', frequency_type=Habit.FREQUENCY_WEEKDAYS)
+    weekly = Habit.objects.create(
+        user=user,
+        name='Weekly',
+        frequency_type=Habit.FREQUENCY_WEEKLY,
+        target_value=2,
+    )
+    paused = Habit.objects.create(user=user, name='Paused', is_paused=True)
+    archived = Habit.objects.create(user=user, name='Archived', is_archived=True)
+
+    for offset in (0, 1, 2):
+        HabitOccurrence.objects.create(
+            user=user,
+            habit=daily,
+            occurrence_date=start_of_week + timedelta(days=offset),
+            status='completed',
+        )
+
+    for offset in (0, 1, 5):
+        HabitOccurrence.objects.create(
+            user=user,
+            habit=weekdays,
+            occurrence_date=start_of_week + timedelta(days=offset),
+            status='completed',
+        )
+
+    HabitOccurrence.objects.create(
+        user=user,
+        habit=weekly,
+        occurrence_date=start_of_week,
+        status='completed',
+    )
+    for habit in (paused, archived):
+        HabitOccurrence.objects.create(
+            user=user,
+            habit=habit,
+            occurrence_date=start_of_week,
+            status='completed',
+        )
+
+    metrics = calculate_weekly_metrics(user, today)
+
+    assert metrics['habits_count'] == 3
+    assert metrics['habit_rate'] == 42

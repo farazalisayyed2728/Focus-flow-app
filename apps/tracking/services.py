@@ -1,7 +1,10 @@
-from datetime import datetime, date
+from datetime import date, datetime
+
 from django.utils import timezone
+
 from apps.routines.models import Routine
 from apps.tracking.models import ScheduleOccurrence
+
 
 def get_today_timeline_data(user, target_date=None):
     """
@@ -65,7 +68,7 @@ def get_today_timeline_data(user, target_date=None):
             'is_current': is_current,
         })
 
-    completion_pct = int((total_completed / total_planned * 100)) if total_planned > 0 else 0
+    completion_pct = int(total_completed / total_planned * 100) if total_planned > 0 else 0
 
     return {
         'timeline': timeline,

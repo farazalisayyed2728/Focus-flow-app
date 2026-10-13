@@ -25,6 +25,12 @@ dev = [
 DJANGO_SETTINGS_MODULE = "config.settings.development"
 
 
+[tool.ruff.lint.per-file-ignores]
+"apps/**/forms.py" = ["RUF012"]
+"apps/**/migrations/*.py" = ["RUF012"]
+"apps/**/models.py" = ["RUF012"]
+
+
 [tool.setuptools.packages.find]
 include = ["apps*", "config*"]
 exclude = ["static*", "templates*", "tests*"]

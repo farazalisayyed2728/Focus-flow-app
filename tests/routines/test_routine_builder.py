@@ -1,8 +1,11 @@
-import pytest
-from django.urls import reverse
-from django.contrib.auth.models import User
-from apps.routines.models import Routine, RoutineBlock
 from datetime import time
+
+import pytest
+from django.contrib.auth.models import User
+from django.urls import reverse
+
+from apps.routines.models import Routine, RoutineBlock
+
 
 @pytest.mark.django_db
 def test_block_creation_and_authorization(client):

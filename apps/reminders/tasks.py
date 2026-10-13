@@ -1,10 +1,15 @@
-from datetime import datetime, date, timedelta
+import logging
 import zoneinfo
-from django.utils import timezone
+from datetime import datetime, timedelta
+
 from celery import shared_task
-from apps.reminders.models import Reminder
-from apps.notifications.services import create_in_app_notification
+from django.utils import timezone
+
 from apps.notifications.models import Notification
+from apps.notifications.services import create_in_app_notification
+from apps.reminders.models import Reminder
+
+logger = logging.getLogger(__name__)
 
 @shared_task
 def check_and_dispatch_reminders():
@@ -20,7 +25,12 @@ def check_and_dispatch_reminders():
         user_tz_name = getattr(rem.user.profile, 'timezone', 'UTC')
         try:
             tz = zoneinfo.ZoneInfo(user_tz_name)
-        except Exception:
+        except (zoneinfo.ZoneInfoNotFoundError, ValueError):
+            logger.warning(
+                "Invalid timezone %r for user %s; using UTC",
+                user_tz_name,
+                rem.user_id,
+            )
             tz = zoneinfo.ZoneInfo('UTC')
 
         user_now = now_utc.astimezone(tz)

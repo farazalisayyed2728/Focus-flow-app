@@ -1,15 +1,21 @@
 import logging
-from django.db import connection
+
 from django.core.cache import cache
+from django.db import DatabaseError, connection
 from django.http import JsonResponse
+from django.shortcuts import redirect, render
 from django.views import View
-from django.shortcuts import render
+from redis.exceptions import RedisError
 
 logger = logging.getLogger(__name__)
 
 
 def shell_preview(request):
     return render(request, "shell_preview.html")
+
+
+def home(request):
+    return redirect("dashboard")
 
 
 
@@ -20,7 +26,7 @@ class HealthCheckView(View):
 
         try:
             connection.ensure_connection()
-        except Exception as exc:
+        except DatabaseError as exc:
             logger.error("Health check DB failure: %s", exc)
             status_data['database'] = 'unavailable'
             status_data['status'] = 'unhealthy'
@@ -30,7 +36,7 @@ class HealthCheckView(View):
             cache.set('_health_check', 'ok', timeout=5)
             if cache.get('_health_check') != 'ok':
                 raise ValueError("Cache read failed")
-        except Exception as exc:
+        except (RedisError, ValueError) as exc:
             logger.error("Health check Cache failure: %s", exc)
             status_data['cache'] = 'unavailable'
             status_data['status'] = 'unhealthy'

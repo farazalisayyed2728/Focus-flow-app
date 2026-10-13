@@ -1,6 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
+from django.db import models
+
 
 class Habit(models.Model):
     FREQUENCY_DAILY = 'daily'

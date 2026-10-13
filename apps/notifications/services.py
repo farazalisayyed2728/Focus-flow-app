@@ -1,5 +1,7 @@
 from django.utils import timezone
+
 from .models import Notification, NotificationPreference
+
 
 def get_or_create_preferences(user):
     prefs, _ = NotificationPreference.objects.get_or_create(user=user)

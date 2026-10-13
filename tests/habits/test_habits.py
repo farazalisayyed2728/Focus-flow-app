@@ -1,9 +1,12 @@
-import pytest
 from datetime import date, timedelta
-from django.urls import reverse
+
+import pytest
 from django.contrib.auth.models import User
+from django.urls import reverse
+
 from apps.habits.models import Habit, HabitOccurrence
 from apps.habits.services import calculate_habit_streak, toggle_habit_status
+
 
 @pytest.mark.django_db
 def test_habit_creation_and_authorization(client):

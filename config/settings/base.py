@@ -1,6 +1,7 @@
 import os
 import sys
 from pathlib import Path
+
 import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -41,6 +42,12 @@ INSTALLED_APPS = [
     'apps.reminders.apps.RemindersConfig',
     'apps.analytics.apps.AnalyticsConfig',
 ]
+
+MAILERS = {
+    'default': {
+        'BACKEND': env('DJANGO_EMAIL_BACKEND'),
+    },
+}
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'

@@ -1,7 +1,9 @@
-from django.db import models
 from django.contrib.auth.models import User
-from apps.routines.models import RoutineBlock
+from django.db import models
+
 from apps.habits.models import Habit
+from apps.routines.models import RoutineBlock
+
 
 class Reminder(models.Model):
     TARGET_ROUTINE = 'routine'

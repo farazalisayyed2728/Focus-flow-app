@@ -1,6 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db import models
+
 
 class Routine(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='routines')
@@ -47,9 +48,8 @@ class RoutineBlock(models.Model):
         ordering = ['sort_order', 'start_time']
 
     def clean(self):
-        if self.start_time and self.end_time:
-            if self.start_time >= self.end_time:
-                raise ValidationError("End time must be after start time.")
+        if self.start_time and self.end_time and self.start_time >= self.end_time:
+            raise ValidationError("End time must be after start time.")
 
     def save(self, *args, **kwargs):
         self.clean()

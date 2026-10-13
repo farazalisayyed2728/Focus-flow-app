@@ -1,7 +1,10 @@
-from datetime import datetime, date
-from django.shortcuts import render
+from datetime import date, datetime
+
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
 from .services import calculate_weekly_metrics
+
 
 @login_required
 def weekly_report_view(request):

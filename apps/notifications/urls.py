@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import notification_tray, notification_mark_read, notification_unread_count
+
+from .views import notification_mark_read, notification_tray, notification_unread_count
 
 urlpatterns = [
     path('tray/', notification_tray, name='notification-tray'),

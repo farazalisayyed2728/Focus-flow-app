@@ -1,5 +1,6 @@
 from .models import Routine, RoutineBlock
 
+
 def get_or_create_default_routine(user):
     routine, _ = Routine.objects.get_or_create(
         user=user,

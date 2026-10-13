@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse
 
+
 @pytest.mark.django_db
 def test_design_system_preview_view(client):
     url = reverse('design-system-preview')

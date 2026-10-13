@@ -1,7 +1,8 @@
 from datetime import date, timedelta
-
 from apps.habits.models import Habit, HabitOccurrence
 from apps.tracking.models import ScheduleOccurrence
+import calendar
+
 
 
 def calculate_weekly_metrics(user, ref_date=None):
@@ -133,4 +134,119 @@ def calculate_weekly_metrics(user, ref_date=None):
         'category_summary': category_summary,
         'habit_rate': habit_rate,
         'habits_count': len(habits),
+    }
+
+
+
+def calculate_monthly_metrics(user, year=None, month=None):
+    """
+    Computes bounded monthly analytics and a calendar heatmap grid for the requested month.
+    """
+    today = date.today()
+    if year is None:
+        year = today.year
+    if month is None:
+        month = today.month
+
+    # Total days and first weekday in the month
+    num_days = calendar.monthrange(year, month)[1]
+    start_date = date(year, month, 1)
+    end_date = date(year, month, num_days)
+
+    # 1. Fetch Schedule Occurrences bounded strictly to this month
+    occurrences = list(ScheduleOccurrence.objects.filter(
+        user=user,
+        occurrence_date__range=(start_date, end_date)
+    ).select_related('routine_block'))
+
+    total_planned_minutes = sum(o.routine_block.duration_minutes for o in occurrences)
+    total_completed_minutes = sum(o.actual_minutes for o in occurrences if o.status == 'completed')
+    completion_rate = int((total_completed_minutes / total_planned_minutes) * 100) if total_planned_minutes > 0 else 0
+
+    # Group occurrences by date
+    occ_by_date = {}
+    for o in occurrences:
+        occ_by_date.setdefault(o.occurrence_date, []).append(o)
+
+    active_days_count = sum(
+        1 for d, occ_list in occ_by_date.items()
+        if any(o.status == 'completed' for o in occ_list)
+    )
+
+    avg_daily_minutes = int(total_completed_minutes / active_days_count) if active_days_count > 0 else 0
+
+    # 2. Category Distribution
+    categories = {}
+    for o in occurrences:
+        cat = o.routine_block.category
+        categories.setdefault(cat, {'planned': 0, 'completed': 0})
+        categories[cat]['planned'] += o.routine_block.duration_minutes
+        if o.status == 'completed':
+            categories[cat]['completed'] += o.actual_minutes
+
+    category_summary = [
+        {
+            'name': cat,
+            'planned_hours': round(vals['planned'] / 60, 1),
+            'completed_hours': round(vals['completed'] / 60, 1),
+            'rate': int((vals['completed'] / vals['planned']) * 100) if vals['planned'] > 0 else 0,
+        }
+        for cat, vals in categories.items()
+    ]
+
+    # 3. Calendar Heatmap Matrix
+    cal = calendar.Calendar(firstweekday=0) # Monday first
+    month_days = cal.monthdatescalendar(year, month)
+
+    heatmap_weeks = []
+    for week in month_days:
+        week_data = []
+        for d in week:
+            is_current_month = (d.month == month)
+            day_occs = occ_by_date.get(d, [])
+            day_planned = sum(o.routine_block.duration_minutes for o in day_occs)
+            day_completed = sum(o.actual_minutes for o in day_occs if o.status == 'completed')
+            rate = int((day_completed / day_planned) * 100) if day_planned > 0 else 0
+
+            # Heatmap intensity bucket: 0 (none), 1 (low), 2 (medium), 3 (high)
+            if not is_current_month or day_completed == 0:
+                intensity = 0
+            elif rate < 40:
+                intensity = 1
+            elif rate < 80:
+                intensity = 2
+            else:
+                intensity = 3
+
+            week_data.append({
+                'date': d,
+                'day_num': d.day,
+                'is_current_month': is_current_month,
+                'is_today': d == today,
+                'intensity': intensity,
+                'completed_hours': round(day_completed / 60, 1),
+                'planned_hours': round(day_planned / 60, 1),
+                'rate': rate,
+            })
+        heatmap_weeks.append(week_data)
+
+    # 4. Navigation dates
+    prev_month_date = (start_date - timedelta(days=1)).replace(day=1)
+    next_month_date = (end_date + timedelta(days=1))
+
+    return {
+        'year': year,
+        'month': month,
+        'month_name': start_date.strftime('%B'),
+        'total_planned_hours': round(total_planned_minutes / 60, 1),
+        'total_completed_hours': round(total_completed_minutes / 60, 1),
+        'completion_rate': completion_rate,
+        'active_days': active_days_count,
+        'avg_daily_hours': round(avg_daily_minutes / 60, 1),
+        'category_summary': category_summary,
+        'heatmap_weeks': heatmap_weeks,
+        'prev_year': prev_month_date.year,
+        'prev_month': prev_month_date.month,
+        'next_year': next_month_date.year,
+        'next_month': next_month_date.month,
     }

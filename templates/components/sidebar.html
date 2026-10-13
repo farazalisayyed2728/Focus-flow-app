@@ -19,6 +19,7 @@
   </div>
 </aside>
 
+<!-- templates/components/sidebar.html -->
 <div class="relative" x-data="{ openTray: false }">
   <button @click="openTray = !openTray" 
           hx-get="{% url 'notification-tray' %}" 
@@ -27,7 +28,9 @@
           style="color: var(--text);">
     <div class="flex items-center gap-2">
       <span>🔔 Alerts</span>
-      <span id="notif-badge" hx-get="{% url 'notification-unread-count' %}" hx-trigger="load" hx-swap="outerHTML"></span>
+      {% if request.user.is_authenticated %}
+        <span id="notif-badge" hx-get="{% url 'notification-unread-count' %}" hx-trigger="load" hx-swap="outerHTML"></span>
+      {% endif %}
     </div>
   </button>
 

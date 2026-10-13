@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 def shell_preview(request):
-    return render(request, "shell_preview.html")
+    return render(request, "shell_preview.html", {"show_shell_nav": True})
 
 
 def home(request):

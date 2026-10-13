@@ -27,7 +27,7 @@
 <!-- templates/base.html -->
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <div class="app-container">
-        {% if request.user.is_authenticated %}
+        {% if request.user.is_authenticated or show_shell_nav %}
             {% include "components/sidebar.html" %}
         {% endif %}
 
@@ -37,7 +37,7 @@
             </main>
         </div>
 
-        {% if request.user.is_authenticated %}
+        {% if request.user.is_authenticated or show_shell_nav %}
             {% include "components/mobile_nav.html" %}
         {% endif %}
     </div>

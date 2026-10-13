@@ -12,17 +12,14 @@
 
         <form method="post" class="space-y-4">
             {% csrf_token %}
-            {% for field in form %}
-                <div>
-                    <label class="block text-sm font-medium mb-1" for="{{ field.id_for_label }}">
-                        {{ field.label }}
-                    </label>
-                    <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" id="{{ field.id_for_label }}" class="input" required>
-                    {% if field.errors %}
-                        <p class="text-xs text-red-500 mt-1">{{ field.errors.0 }}</p>
-                    {% endif %}
-                </div>
-            {% endfor %}
+            <div>
+                <label class="block text-sm font-medium mb-1">Username</label>
+                <input type="text" name="username" class="input" required autofocus>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Password</label>
+                <input type="password" name="password" class="input" required>
+            </div>
 
             <button type="submit" class="btn btn-primary w-full mt-4">Log In</button>
         </form>

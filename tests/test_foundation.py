@@ -31,3 +31,13 @@ def test_home_today_and_analytics_navigation(client):
     analytics_response = client.get(reverse('analytics'))
     assert analytics_response.status_code == 200
     assert 'Weekly Review' in analytics_response.content.decode('utf-8')
+
+
+@pytest.mark.django_db
+def test_anonymous_htmx_requests_do_not_redirect_or_render_sidebar(client):
+    login_response = client.get(reverse('login'))
+    assert login_response.status_code == 200
+    assert 'desktop-sidebar' not in login_response.content.decode('utf-8')
+
+    unread_response = client.get(reverse('notification-unread-count'), HTTP_HX_REQUEST='true')
+    assert unread_response.status_code == 204

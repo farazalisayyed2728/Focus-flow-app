@@ -1,0 +1,101 @@
+<div id="monthly-stats-container" class="space-y-6">
+    <!-- Header with Month Switcher -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight">Monthly Review</h1>
+            <p style="color: var(--text-muted);" class="text-xs">
+                {{ metrics.month_name }} {{ metrics.year }}
+            </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <a hx-get="{% url 'monthly-analytics' %}?year={{ metrics.prev_year }}&month={{ metrics.prev_month }}"
+               hx-target="#monthly-stats-container"
+               hx-push-url="true"
+               class="btn btn-secondary py-1 px-3 text-xs cursor-pointer">
+                &larr; Prev
+            </a>
+            <a hx-get="{% url 'monthly-analytics' %}?year={{ metrics.next_year }}&month={{ metrics.next_month }}"
+               hx-target="#monthly-stats-container"
+               hx-push-url="true"
+               class="btn btn-secondary py-1 px-3 text-xs cursor-pointer">
+                Next &rarr;
+            </a>
+        </div>
+    </div>
+
+    <!-- Monthly KPI Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="card">
+            <span class="text-xs block" style="color: var(--text-muted);">Planned Hours</span>
+            <span class="text-2xl font-bold mt-1 block">{{ metrics.total_planned_hours }}h</span>
+        </div>
+        <div class="card">
+            <span class="text-xs block" style="color: var(--text-muted);">Completed Hours</span>
+            <span class="text-2xl font-bold mt-1 block" style="color: var(--accent);">{{ metrics.total_completed_hours }}h</span>
+        </div>
+        <div class="card">
+            <span class="text-xs block" style="color: var(--text-muted);">Active Days</span>
+            <span class="text-2xl font-bold mt-1 block">{{ metrics.active_days }}</span>
+        </div>
+        <div class="card">
+            <span class="text-xs block" style="color: var(--text-muted);">Avg Daily Hours</span>
+            <span class="text-2xl font-bold mt-1 block">{{ metrics.avg_daily_hours }}h</span>
+        </div>
+    </div>
+
+    <!-- Calendar Heatmap Card -->
+    <div class="card">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-bold">Activity Heatmap</h2>
+            <div class="flex items-center gap-2 text-[10px]" style="color: var(--text-muted);">
+                <span>Less</span>
+                <span class="w-2.5 h-2.5 rounded bg-stone-100 border" style="border-color: var(--border);"></span>
+                <span class="w-2.5 h-2.5 rounded bg-orange-200"></span>
+                <span class="w-2.5 h-2.5 rounded bg-orange-400"></span>
+                <span class="w-2.5 h-2.5 rounded bg-orange-600"></span>
+                <span>More</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-7 gap-1.5 text-center mb-1 text-[11px] font-semibold" style="color: var(--text-muted);">
+            <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+        </div>
+
+        <div class="space-y-1.5">
+            {% for week in metrics.heatmap_weeks %}
+                <div class="grid grid-cols-7 gap-1.5">
+                    {% for day in week %}
+                        <div class="p-2 rounded-lg text-center transition-colors {% if not day.is_current_month %}opacity-25 bg-stone-50{% else %}{% if day.intensity == 0 %}bg-stone-50 border border-stone-100{% elif day.intensity == 1 %}bg-orange-100 text-orange-900{% elif day.intensity == 2 %}bg-orange-300 text-stone-900{% else %}bg-orange-500 text-white font-bold{% endif %}{% endif %} {% if day.is_today %}ring-2 ring-orange-600 ring-offset-1{% endif %}"
+                             title="{{ day.date|date:'Y-m-d' }}: {{ day.completed_hours }}h completed ({{ day.rate }}%)">
+                            <span class="text-xs block">{{ day.day_num }}</span>
+                            {% if day.is_current_month and day.completed_hours > 0 %}
+                                <span class="text-[9px] block leading-none mt-0.5 opacity-80">{{ day.completed_hours }}h</span>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Category Distribution -->
+    <div class="card">
+        <h2 class="text-sm font-bold mb-3">Monthly Category Breakdown</h2>
+        <div class="space-y-3">
+            {% for cat in metrics.category_summary %}
+                <div>
+                    <div class="flex justify-between text-xs font-medium mb-1">
+                        <span>{{ cat.name }}</span>
+                        <span>{{ cat.completed_hours }}h / {{ cat.planned_hours }}h ({{ cat.rate }}%)</span>
+                    </div>
+                    <div class="w-full h-2 rounded-full" style="background-color: var(--surface-muted);">
+                        <div class="h-2 rounded-full bg-orange-500" style="width: {{ cat.rate }}%;"></div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-xs text-stone-400">No scheduled blocks categorized this month.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>

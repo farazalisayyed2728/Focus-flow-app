@@ -62,8 +62,9 @@ class HabitOccurrence(models.Model):
     class Meta:
         unique_together = ('habit', 'occurrence_date')
         indexes = [
-            models.Index(fields=['user', 'occurrence_date']),
-        ]
+            models.Index(fields=['user', 'occurrence_date'], name='habit_user_date_idx'),
+            models.Index(fields=['habit', 'status'], name='habit_stat_idx'),
+    ]
 
     def __str__(self):
         return f"{self.habit.name} on {self.occurrence_date} ({self.status})"

@@ -11,6 +11,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from apps.notifications.models import NotificationPreference
 from .forms import ProfileSettingsForm, NotificationPreferenceForm, AccountDeleteConfirmationForm
 from .services import compile_user_data_export
+from apps.core.ratelimit import rate_limit
 
 
 def signup_view(request):
@@ -112,3 +113,18 @@ def export_user_data(request):
     response = HttpResponse(payload, content_type='application/json')
     response['Content-Disposition'] = f'attachment; filename="focusflow_data_{request.user.username}.json"'
     return response
+
+
+@rate_limit(key_prefix='signup', limit=10, period=60)
+def signup_view(request):
+    # Existing signup logic...
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    # ...
+
+@rate_limit(key_prefix='login', limit=10, period=60)
+def login_view(request):
+    # Existing login logic...
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    # ...

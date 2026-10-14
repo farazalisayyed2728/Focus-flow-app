@@ -93,17 +93,19 @@ class ReadinessCheckView(View):
 
 
 
-
 def service_worker(request):
     sw_path = os.path.join(settings.BASE_DIR, 'static', 'sw.js')
-    response = FileResponse(open(sw_path, 'rb'), content_type='application/javascript')
-    # Service-Worker-Allowed header ensures it controls all routes under /
+    with open(sw_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    response = HttpResponse(content, content_type='application/javascript')
     response['Service-Worker-Allowed'] = '/'
     return response
 
 def pwa_manifest(request):
     manifest_path = os.path.join(settings.BASE_DIR, 'static', 'manifest.json')
-    return FileResponse(open(manifest_path, 'rb'), content_type='application/manifest+json')
+    with open(manifest_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    return HttpResponse(content, content_type='application/manifest+json')
 
 def offline_view(request):
     return render(request, 'offline.html')

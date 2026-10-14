@@ -35,9 +35,9 @@ def test_dashboard_query_count_bounded(client, django_assert_num_queries):
     # Initial view load (pre-populates occurrences)
     client.get(reverse('dashboard'))
 
-    # Subsequent dashboard request must run within a strict query budget (<= 8 queries)
-    # Regardless of whether there are 5 or 20 blocks, query count should remain constant
-    with django_assert_num_queries(8):
+    # Subsequent dashboard request must run within a strict query budget (exactly 6 queries)
+    # Regardless of whether there are 5 or 20 blocks, query count remains constant
+    with django_assert_num_queries(6):
         response = client.get(reverse('dashboard'))
         assert response.status_code == 200
 

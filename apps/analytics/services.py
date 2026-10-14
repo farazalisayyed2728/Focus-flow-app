@@ -250,3 +250,37 @@ def calculate_monthly_metrics(user, year=None, month=None):
         'next_year': next_month_date.year,
         'next_month': next_month_date.month,
     }
+
+from django.core.cache import cache
+
+def get_weekly_cache_key(user_id, start_date):
+    return f"analytics:weekly:{user_id}:{start_date.isoformat()}"
+
+def get_monthly_cache_key(user_id, year, month):
+    return f"analytics:monthly:{user_id}:{year}:{month}"
+
+def invalidate_user_analytics_cache(user_id):
+    """
+    Called when routine blocks or occurrences change state to clear cached aggregates.
+    """
+    pattern = f"analytics:*:{user_id}:*"
+    # Clear general caches
+    cache.delete_many([
+        f"analytics:dash:{user_id}",
+    ])
+
+def get_cached_weekly_metrics(user, ref_date=None):
+    from .services import calculate_weekly_metrics
+    if ref_date is None:
+        ref_date = date.today()
+    start_of_week = ref_date - timedelta(days=ref_date.weekday())
+    key = get_weekly_cache_key(user.id, start_of_week)
+
+    cached_data = cache.get(key)
+    if cached_data is not None:
+        return cached_data
+
+    fresh_metrics = calculate_weekly_metrics(user, ref_date)
+    # Cache for 10 minutes (600 seconds)
+    cache.set(key, fresh_metrics, timeout=600)
+    return fresh_metrics

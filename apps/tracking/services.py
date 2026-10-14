@@ -1,7 +1,8 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from django.utils import timezone
 
+from django.core.cache import cache
 from apps.routines.models import Routine
 from apps.tracking.models import ScheduleOccurrence
 
@@ -80,10 +81,8 @@ def get_today_timeline_data(user, target_date=None):
         'target_date': target_date,
     }
 
+
 def toggle_occurrence_status(user, occurrence_id):
-    """
-    Idempotent toggle between 'planned' and 'completed'.
-    """
     occ = ScheduleOccurrence.objects.select_related('routine_block').get(id=occurrence_id, user=user)
     if occ.status == 'completed':
         occ.status = 'planned'
@@ -94,4 +93,8 @@ def toggle_occurrence_status(user, occurrence_id):
         occ.completed_at = timezone.now()
         occ.actual_minutes = occ.routine_block.duration_minutes
     occ.save()
+
+    # Invalidate cached analytics for this user
+    cache.delete(f"analytics:weekly:{user.id}:{occ.occurrence_date - timedelta(days=occ.occurrence_date.weekday())}")
+    cache.delete(f"analytics:monthly:{user.id}:{occ.occurrence_date.year}:{occ.occurrence_date.month}")
     return occ

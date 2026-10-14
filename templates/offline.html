@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}You are Offline — FocusFlow{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto text-center py-16 space-y-4">
+    <div class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-2xl" style="background-color: var(--surface-muted); color: var(--accent);">
+        ⚡
+    </div>
+    <h1 class="text-2xl font-bold tracking-tight">You're Currently Offline</h1>
+    <p style="color: var(--text-muted);" class="text-xs">
+        FocusFlow couldn't connect to the server. Your previously loaded daily timeline will re-sync once connection restores[cite: 1, 5].
+    </p>
+    <div class="pt-2">
+        <button onclick="window.location.reload()" class="btn btn-primary text-xs">
+            Retry Connection
+        </button>
+    </div>
+</div>
+{% endblock %}

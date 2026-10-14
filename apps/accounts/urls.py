@@ -6,6 +6,9 @@ from .views import (
     logout_view,
     onboarding_view,
     signup_view,
+    settings_view,
+    export_user_data,
+
 )
 
 urlpatterns = [
@@ -14,4 +17,6 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('onboarding/', onboarding_view, name='onboarding'),
     path('dashboard/', dashboard_placeholder, name='dashboard'),
+    path('settings/', settings_view, name='settings'),
+    path('settings/export/', export_user_data, name='settings-export'),
 ]

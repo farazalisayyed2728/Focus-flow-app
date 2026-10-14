@@ -7,6 +7,9 @@ from django.views import View
 from django.db import DatabaseError, connection
 from django.shortcuts import redirect, render
 from redis.exceptions import RedisError
+from django.http import HttpResponse, FileResponse
+from django.conf import settings
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -87,3 +90,20 @@ class ReadinessCheckView(View):
             'status': 'ready' if is_healthy else 'degraded',
             'checks': diagnostics
         }, status=status_code)
+
+
+
+
+def service_worker(request):
+    sw_path = os.path.join(settings.BASE_DIR, 'static', 'sw.js')
+    response = FileResponse(open(sw_path, 'rb'), content_type='application/javascript')
+    # Service-Worker-Allowed header ensures it controls all routes under /
+    response['Service-Worker-Allowed'] = '/'
+    return response
+
+def pwa_manifest(request):
+    manifest_path = os.path.join(settings.BASE_DIR, 'static', 'manifest.json')
+    return FileResponse(open(manifest_path, 'rb'), content_type='application/manifest+json')
+
+def offline_view(request):
+    return render(request, 'offline.html')

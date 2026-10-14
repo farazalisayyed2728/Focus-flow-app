@@ -16,7 +16,7 @@ from apps.core.ratelimit import rate_limit
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from apps.core.ratelimit import rate_limit
+
 
 def signup_view(request):
     if request.user.is_authenticated:

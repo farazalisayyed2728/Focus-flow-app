@@ -5,6 +5,13 @@ from django.shortcuts import redirect, render
 
 from .forms import OnboardingForm, SignUpForm
 
+import json
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from apps.notifications.models import NotificationPreference
+from .forms import ProfileSettingsForm, NotificationPreferenceForm, AccountDeleteConfirmationForm
+from .services import compile_user_data_export
+
 
 def signup_view(request):
     if request.user.is_authenticated:
@@ -63,3 +70,45 @@ def onboarding_view(request):
 @login_required
 def dashboard_placeholder(request):
     return render(request, 'dashboard/index.html', {'user': request.user})
+
+
+
+@login_required
+def settings_view(request):
+    profile = request.user.profile
+    notif_prefs, _ = NotificationPreference.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'update_profile':
+            form = ProfileSettingsForm(request.POST, instance=profile)
+            if form.is_valid():
+                form.save()
+                return redirect('settings')
+        elif action == 'update_notifications':
+            n_form = NotificationPreferenceForm(request.POST, instance=notif_prefs)
+            if n_form.is_valid():
+                n_form.save()
+                return redirect('settings')
+        elif action == 'delete_account':
+            del_form = AccountDeleteConfirmationForm(request.POST)
+            if del_form.is_valid():
+                user = request.user
+                logout(request)
+                user.delete()
+                return redirect('login')
+
+    return render(request, 'accounts/settings.html', {
+        'profile_form': ProfileSettingsForm(instance=profile),
+        'notif_form': NotificationPreferenceForm(instance=notif_prefs),
+        'delete_form': AccountDeleteConfirmationForm(),
+    })
+
+@login_required
+def export_user_data(request):
+    data = compile_user_data_export(request.user)
+    payload = json.dumps(data, indent=2)
+    response = HttpResponse(payload, content_type='application/json')
+    response['Content-Disposition'] = f'attachment; filename="focusflow_data_{request.user.username}.json"'
+    return response

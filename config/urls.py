@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import include, path
 
-from apps.core.views import HealthCheckView, shell_preview
+from apps.core.views import HealthCheckView, pwa_manifest, shell_preview,service_worker
 from apps.dashboard.views import dashboard_view
 from apps.core.views import HealthCheckView, ReadinessCheckView, shell_preview
 
@@ -9,6 +9,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('health/', HealthCheckView.as_view(), name='health-check'),
     path('ready/', ReadinessCheckView.as_view(), name='readiness-check'),
+    path('sw.js', service_worker, name='service-worker'),
+    path('manifest.json', pwa_manifest, name='pwa-manifest'),
     path('design-system/', shell_preview, name='design-system-preview'),
     path('routines/', include('apps.routines.urls')),
     path('dashboard/', include('apps.dashboard.urls')),

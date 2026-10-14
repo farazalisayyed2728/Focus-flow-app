@@ -13,6 +13,10 @@ from .forms import ProfileSettingsForm, NotificationPreferenceForm, AccountDelet
 from .services import compile_user_data_export
 from apps.core.ratelimit import rate_limit
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from apps.core.ratelimit import rate_limit
 
 def signup_view(request):
     if request.user.is_authenticated:
@@ -117,14 +121,36 @@ def export_user_data(request):
 
 @rate_limit(key_prefix='signup', limit=10, period=60)
 def signup_view(request):
-    # Existing signup logic...
     if request.user.is_authenticated:
         return redirect('dashboard')
-    # ...
+
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            login(request, user)
+            return redirect('onboarding')
+    else:
+        form = SignUpForm()
+
+    return render(request, 'accounts/signup.html', {'form': form})
 
 @rate_limit(key_prefix='login', limit=10, period=60)
 def login_view(request):
-    # Existing login logic...
     if request.user.is_authenticated:
         return redirect('dashboard')
-    # ...
+
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            if hasattr(user, 'profile') and not user.profile.onboarding_completed:
+                return redirect('onboarding')
+            return redirect('dashboard')
+    else:
+        form = AuthenticationForm()
+
+    return render(request, 'accounts/login.html', {'form': form})

@@ -24,7 +24,8 @@ class ScheduleOccurrence(models.Model):
         # Ensures one unique record per user, block, and date
         unique_together = ('user', 'routine_block', 'occurrence_date')
         indexes = [
-            models.Index(fields=['user', 'occurrence_date']),
+            models.Index(fields=['user', 'occurrence_date'], name='track_user_date_idx'),
+            models.Index(fields=['user', 'status', 'occurrence_date'], name='track_user_stat_date_idx'),
         ]
 
     def __str__(self):

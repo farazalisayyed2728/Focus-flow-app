@@ -50,23 +50,27 @@
         </div>
     </div>
 
-    <!-- Timeline Checklist -->
+    <!-- Pomodoro Focus Section -->
+    {% include "components/pomodoro.html" %}
+
+    <!-- Timeline Checklist with Filter Bar -->
     <div class="space-y-3">
-        <div class="flex items-center justify-between">
-            <h2 class="text-sm font-bold uppercase tracking-wider" style="color: var(--text-muted);">Today's Schedule</h2>
-            <a href="{% url 'routine-builder' %}" class="text-xs underline" style="color: var(--accent);">Edit Routine</a>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+                <h2 class="text-sm font-bold uppercase tracking-wider" style="color: var(--text-muted);">Today's Schedule</h2>
+                <a href="{% url 'routine-builder' %}" class="text-xs underline" style="color: var(--accent);">Edit Routine</a>
+            </div>
+
+            <!-- Category Filter Pills -->
+            <div class="flex flex-wrap gap-1 text-xs">
+                <a hx-get="{% url 'dashboard' %}?category=all&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="pill cursor-pointer">All</a>
+                <a hx-get="{% url 'dashboard' %}?category=Study&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="pill cursor-pointer">Study</a>
+                <a hx-get="{% url 'dashboard' %}?category=Work&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="pill cursor-pointer">Work</a>
+                <a hx-get="{% url 'dashboard' %}?category=Fitness&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="pill cursor-pointer">Fitness</a>
+            </div>
         </div>
 
-        <div class="space-y-2">
-            {% for item in timeline_data.timeline %}
-                {% include "dashboard/partials/occurrence_row.html" with item=item %}
-            {% empty %}
-                <div class="card text-center py-8" style="color: var(--text-muted);">
-                    <p class="text-sm">No scheduled routine blocks for today.</p>
-                    <a href="{% url 'routine-builder' %}" class="btn btn-primary text-xs mt-3">Add Blocks</a>
-                </div>
-            {% endfor %}
-        </div>
+        {% include "dashboard/partials/timeline_list.html" with timeline_data=timeline_data %}
     </div>
 </div>
 {% endblock %}

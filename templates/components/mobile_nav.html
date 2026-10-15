@@ -1,20 +1,14 @@
-<nav class="md:hidden fixed bottom-0 left-0 right-0 border-t flex justify-around items-center h-16 px-2 z-40" style="background-color: var(--surface); border-color: var(--border);">
-  <a href="{% url 'core:home' %}" class="flex flex-col items-center text-xs" style="color: var(--text);">
-    <span>Home</span>
-  </a>
-  <a href="{% url 'today-dashboard' %}" class="flex flex-col items-center text-xs" style="color: var(--text);">
-    <span>Today</span>
-  </a>
+<nav class="md:hidden fixed bottom-0 left-0 right-0 flex justify-around items-center h-20 px-4 z-40" 
+     style="background-color: var(--surface); box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05); border-top: 1px solid var(--border);">
+  <a href="{% url 'dashboard' %}" class="neu-circle-btn text-sm" aria-label="Dashboard">📊</a>
+  <a href="{% url 'routine-builder' %}" class="neu-circle-btn text-sm" aria-label="Routines">⏱️</a>
   
-  <!-- Quick Action Floating Button -->
-  <button @click="$dispatch('open-quick-add')" class="w-12 h-12 rounded-full -mt-6 flex items-center justify-center text-white text-2xl shadow-lg border-2 border-white" style="background-color: var(--accent);" aria-label="Quick Add">
+  <!-- Raised Primary Center Button -->
+  <a href="{% url 'routine-builder' %}" class="w-14 h-14 rounded-full flex items-center justify-center text-white text-2xl -mt-6" 
+     style="background: var(--accent); box-shadow: var(--shadow-raised); text-decoration: none;" aria-label="Add Routine Block">
     +
-  </button>
+  </a>
   
-  <a href="/habits/" class="flex flex-col items-center text-xs" style="color: var(--text);">
-    <span>Habits</span>
-  </a>
-  <a href="{% url 'analytics' %}" class="flex flex-col items-center text-xs" style="color: var(--text);">
-    <span>Analytics</span>
-  </a>
+  <a href="{% url 'habit-list' %}" class="neu-circle-btn text-sm" aria-label="Habits">🌱</a>
+  <a href="{% url 'weekly-analytics' %}" class="neu-circle-btn text-sm" aria-label="Analytics">📈</a>
 </nav>

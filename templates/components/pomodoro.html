@@ -1,4 +1,4 @@
-<div class="card space-y-3" x-data="{
+<div class="card space-y-4" x-data="{
     modes: { focus: 25 * 60, short: 5 * 60, long: 15 * 60 },
     currentMode: 'focus',
     timeLeft: 25 * 60,
@@ -19,7 +19,7 @@
                 this.timeLeft--;
             } else {
                 this.pause();
-                this.$dispatch('show-toast', { message: 'Focus session completed! Take a breath.', type: 'info' });
+                this.$dispatch('show-toast', { message: 'Focus block finished! Take a break.', type: 'info' });
             }
         }, 1000);
     },
@@ -38,20 +38,21 @@
     }
 }">
     <div class="flex items-center justify-between">
-        <span class="text-xs font-bold uppercase tracking-wider" style="color: var(--text-muted);">Focus Timer</span>
-        <div class="flex gap-1 text-[11px]">
-            <button @click="setMode('focus')" :class="currentMode === 'focus' ? 'pill-accent' : ''" class="pill cursor-pointer">Focus</button>
-            <button @click="setMode('short')" :class="currentMode === 'short' ? 'pill-accent' : ''" class="pill cursor-pointer">Short Break</button>
-            <button @click="setMode('long')" :class="currentMode === 'long' ? 'pill-accent' : ''" class="pill cursor-pointer">Long Break</button>
+        <span class="text-xs font-bold uppercase tracking-wider" style="color: var(--text-muted);">Tactile Focus Timer</span>
+        <div class="flex gap-2">
+            <button @click="setMode('focus')" :class="currentMode === 'focus' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">Focus</button>
+            <button @click="setMode('short')" :class="currentMode === 'short' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">Short Break</button>
+            <button @click="setMode('long')" :class="currentMode === 'long' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">Long Break</button>
         </div>
     </div>
 
-    <div class="text-center py-2">
-        <div class="text-4xl font-extrabold tracking-tight" x-text="formatTime()">25:00</div>
+    <!-- Recessed Clock Display Wells (UI 3 Inspired) -->
+    <div class="neu-sunken text-center py-6 max-w-xs mx-auto">
+        <div class="text-5xl font-black tracking-tight" style="color: var(--text);" x-text="formatTime()">25:00</div>
     </div>
 
-    <div class="flex justify-center gap-2">
-        <button @click="toggle()" class="btn btn-primary text-xs py-1 px-4" x-text="isRunning ? 'Pause' : 'Start'"></button>
-        <button @click="reset()" class="btn btn-secondary text-xs py-1 px-3">Reset</button>
+    <div class="flex justify-center gap-4">
+        <button @click="toggle()" class="btn btn-primary px-8" x-text="isRunning ? 'Pause' : 'Start Focus'"></button>
+        <button @click="reset()" class="btn btn-secondary px-6">Reset</button>
     </div>
 </div>

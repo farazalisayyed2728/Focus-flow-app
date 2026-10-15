@@ -8,10 +8,11 @@ class SecurityHeadersMiddleware:
     def __call__(self, request):
         response = self.get_response(request)
 
-        # Content Security Policy (CSP) compatible with CDNs used for HTMX / Alpine.js
+        # Keep executable scripts same-origin and forbid inline event-handler scripts.
         csp_directives = [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' https://unpkg.com",
+            "script-src 'self'",
+            "script-src-attr 'none'",
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data:",
             "connect-src 'self'",
@@ -21,7 +22,7 @@ class SecurityHeadersMiddleware:
             "form-action 'self'",
             "frame-ancestors 'none'",
         ]
-        response.headers.setdefault("Content-Security-Policy", "; ".join(csp_directives))
+        response.headers["Content-Security-Policy"] = "; ".join(csp_directives)
 
         # Permissions and Referrer policies
         response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")

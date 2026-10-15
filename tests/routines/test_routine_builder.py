@@ -33,6 +33,25 @@ def test_block_creation_and_authorization(client):
     res_delete = client.post(delete_url)
     assert res_delete.status_code == 404
 
+
+@pytest.mark.django_db
+def test_invalid_block_creation_keeps_validation_errors_in_modal(client):
+    user = User.objects.create_user(username='routine-form-user', password='Password123!')
+    client.force_login(user)
+
+    response = client.post(reverse('routine-block-create'), {
+        'title': 'Invalid block',
+        'category': 'Work',
+        'start_time': '11:00',
+        'end_time': '10:00',
+    }, HTTP_HX_REQUEST='true')
+
+    assert response.status_code == 422
+    assert response['HX-Retarget'] == '#modal-body'
+    assert response['HX-Reswap'] == 'innerHTML'
+    assert b'End time must be later than start time.' in response.content
+    assert not RoutineBlock.objects.filter(routine__user=user).exists()
+
 @pytest.mark.django_db
 def test_block_duplicate_and_overlap(client):
     user = User.objects.create_user(username='alex', password='Password123!')

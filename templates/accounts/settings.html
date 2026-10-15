@@ -3,7 +3,7 @@
 {% block title %}Settings & Preferences — FocusFlow{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto space-y-6" x-data="{ tab: 'profile' }">
+<div class="max-w-4xl mx-auto space-y-6" x-data="settingsTabs">
     <div>
         <h1 class="text-2xl font-bold tracking-tight">Settings & Preferences</h1>
         <p style="color: var(--text-muted);" class="text-xs">Configure your display, routine defaults, notifications, and personal data.</p>
@@ -11,13 +11,13 @@
 
     <!-- Navigation Tabs -->
     <div class="flex gap-2 border-b pb-2" style="border-color: var(--border);">
-        <button @click="tab = 'profile'" :class="tab === 'profile' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">
+        <button @click="setTab('profile')" :class="tab === 'profile' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">
             Profile & Display
         </button>
-        <button @click="tab = 'notifications'" :class="tab === 'notifications' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">
+        <button @click="setTab('notifications')" :class="tab === 'notifications' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">
             Notifications
         </button>
-        <button @click="tab = 'data'" :class="tab === 'data' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">
+        <button @click="setTab('data')" :class="tab === 'data' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">
             Data & Privacy
         </button>
     </div>

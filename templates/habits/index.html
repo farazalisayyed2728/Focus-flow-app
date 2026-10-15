@@ -3,7 +3,7 @@
 {% block title %}Habits — FocusFlow{% endblock %}
 
 {% block content %}
-<div class="space-y-6 max-w-4xl mx-auto" x-data="{ openModal: false }">
+<div class="space-y-6 max-w-4xl mx-auto" x-data="habitModal">
 
     <!-- Page Header -->
     <div class="flex items-center justify-between">
@@ -20,7 +20,7 @@
         <button
             hx-get="{% url 'habit-create' %}"
             hx-target="#modal-body"
-            @click="openModal = true"
+            @click="openModal()"
             class="btn btn-primary text-xs"
         >
             + New Habit
@@ -49,13 +49,13 @@
 
     <!-- Habit Form Modal -->
     <div
-        x-show="openModal"
+        x-show="isOpen"
         x-cloak
         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
     >
         <div
             class="card w-full max-w-lg shadow-2xl relative"
-            @click.away="openModal = false"
+            @click.away="closeModal()"
         >
             <div
                 class="flex justify-between items-center mb-4 pb-2 border-b"
@@ -66,7 +66,7 @@
                 </h2>
 
                 <button
-                    @click="openModal = false"
+                    @click="closeModal()"
                     class="text-xl text-stone-400 hover:text-stone-700 font-bold"
                 >
                     &times;

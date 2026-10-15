@@ -1,7 +1,6 @@
 <form hx-post="{% url 'habit-create' %}"
       hx-target="#habit-grid"
       hx-swap="beforeend"
-      @htmx:after-request="if($event.detail.successful) { openModal = false; }"
       class="space-y-4">
     {% csrf_token %}
     <div>
@@ -37,7 +36,7 @@
     </div>
 
     <div class="flex justify-end gap-2 pt-2">
-        <button type="button" @click="openModal = false" class="btn btn-secondary text-xs">Cancel</button>
+        <button type="button" @click="closeModal()" class="btn btn-secondary text-xs">Cancel</button>
         <button type="submit" class="btn btn-primary text-xs">Create Habit</button>
     </div>
 </form>

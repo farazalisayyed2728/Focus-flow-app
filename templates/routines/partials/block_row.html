@@ -24,7 +24,7 @@
 
         <button hx-get="{% url 'routine-block-update' block.id %}"
                 hx-target="#modal-body"
-                @click="openModal = true"
+                @click="openModal()"
                 class="btn btn-secondary py-1 px-2.5 text-xs">
             Edit
         </button>

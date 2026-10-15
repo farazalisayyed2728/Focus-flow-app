@@ -1,54 +1,15 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" x-data="{ 
-    theme: localStorage.getItem('focusflow_theme') || 'light',
-    initTheme() {
-        const active = this.theme === 'system' 
-            ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-            : this.theme;
-        document.documentElement.setAttribute('data-theme', active);
-        if (active === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    },
-    toggleTheme() {
-        this.theme = (this.theme === 'dark') ? 'light' : 'dark';
-        localStorage.setItem('focusflow_theme', this.theme);
-        this.initTheme();
-    }
-}" x-init="initTheme()">
+<html lang="en" x-data="theme" @toggle-theme.window="toggleTheme()">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}FocusFlow{% endblock %}</title>
     
-    <!-- Tailwind CSS CDN for instant layout resolution -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: ['class', '[data-theme="dark"]'],
-            theme: {
-                extend: {
-                    colors: {
-                        brand: '#3182ce',
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Alpine.js & HTMX -->
-    <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
-    <script src="https://unpkg.com/alpinejs@3.13.10/dist/cdn.min.js" defer></script>
-
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
     <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
+    <script type="module" src="{% static 'js/app.js' %}"></script>
 </head>
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <div class="app-layout">

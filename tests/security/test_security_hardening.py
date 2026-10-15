@@ -18,7 +18,14 @@ def test_security_headers_present(client):
     response = client.get(reverse('login'))
     assert response.status_code == 200
     assert 'Content-Security-Policy' in response.headers
-    assert "default-src 'self'" in response.headers['Content-Security-Policy']
+    csp = response.headers['Content-Security-Policy']
+    assert "default-src 'self'" in csp
+    assert "script-src 'self'" in csp
+    assert "script-src-attr 'none'" in csp
+    assert "'unsafe-eval'" not in csp
+    assert "'unsafe-inline'" not in csp.split("script-src ", 1)[1].split(";", 1)[0]
+    assert "https://unpkg.com" not in csp
+    assert "https://cdn.tailwindcss.com" not in csp
     assert response.headers.get('X-Content-Type-Options') == 'nosniff'
     assert response.headers.get('X-Frame-Options') == 'DENY'
     assert response.headers.get('Referrer-Policy') == 'strict-origin-when-cross-origin'

@@ -31,8 +31,8 @@
 
   <div class="flex flex-col gap-3 pt-6 border-t" style="border-color: var(--border-subtle);">
     <!-- In-App Notification Dropdown -->
-    <div class="relative" x-data="{ openTray: false }">
-      <button @click="openTray = !openTray" 
+    <div class="relative" x-data="notificationTray">
+      <button @click="toggleTray()"
               hx-get="{% url 'notification-tray' %}" 
               hx-target="#tray-dropdown"
               class="flex items-center justify-between w-full px-4 py-3 rounded-2xl text-xs font-semibold cursor-pointer"
@@ -45,21 +45,21 @@
 
       <div id="tray-dropdown" 
            x-show="openTray" 
-           @click.away="openTray = false" 
+           @click.away="closeTray()"
            x-cloak 
            class="absolute left-0 bottom-14 w-64 card p-0 overflow-hidden z-50">
       </div>
     </div>
 
     <!-- Theme Mode Toggle -->
-    <button @click="toggleTheme()" class="btn btn-secondary w-full text-xs">
+    <button @click="$dispatch('toggle-theme')" class="btn btn-secondary w-full text-xs">
       Toggle Light / Dark
     </button>
   </div>
 </aside>
 
-<div class="relative" x-data="{ openTray: false }">
-  <button @click="openTray = !openTray" 
+<div class="relative" x-data="notificationTray">
+  <button @click="toggleTray()"
           hx-get="{% url 'notification-tray' %}" 
           hx-target="#tray-dropdown"
           class="flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm font-medium hover:bg-stone-100" 
@@ -72,7 +72,7 @@
 
   <div id="tray-dropdown" 
        x-show="openTray" 
-       @click.away="openTray = false" 
+       @click.away="closeTray()"
        x-cloak 
        class="absolute left-0 bottom-12 w-64 card shadow-xl z-50 p-0 overflow-hidden">
   </div>

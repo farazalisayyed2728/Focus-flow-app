@@ -1,42 +1,4 @@
-<div class="card space-y-4" x-data="{
-    modes: { focus: 25 * 60, short: 5 * 60, long: 15 * 60 },
-    currentMode: 'focus',
-    timeLeft: 25 * 60,
-    isRunning: false,
-    timer: null,
-    setMode(mode) {
-        this.pause();
-        this.currentMode = mode;
-        this.timeLeft = this.modes[mode];
-    },
-    toggle() {
-        if (this.isRunning) { this.pause(); } else { this.start(); }
-    },
-    start() {
-        this.isRunning = true;
-        this.timer = setInterval(() => {
-            if (this.timeLeft > 0) {
-                this.timeLeft--;
-            } else {
-                this.pause();
-                this.$dispatch('show-toast', { message: 'Focus block finished! Take a break.', type: 'info' });
-            }
-        }, 1000);
-    },
-    pause() {
-        this.isRunning = false;
-        clearInterval(this.timer);
-    },
-    reset() {
-        this.pause();
-        this.timeLeft = this.modes[this.currentMode];
-    },
-    formatTime() {
-        const m = Math.floor(this.timeLeft / 60).toString().padStart(2, '0');
-        const s = (this.timeLeft % 60).toString().padStart(2, '0');
-        return `${m}:${s}`;
-    }
-}">
+<div class="card space-y-4" x-data="pomodoro">
     <div class="flex items-center justify-between">
         <span class="text-xs font-bold uppercase tracking-wider" style="color: var(--text-muted);">Tactile Focus Timer</span>
         <div class="flex gap-2">

@@ -11,6 +11,22 @@ from .services import (
 )
 
 
+def _invalid_block_form_response(request, form, block=None):
+    context = {'form': form}
+    if block is not None:
+        context['block'] = block
+
+    response = render(
+        request,
+        'routines/partials/block_form.html',
+        context,
+        status=422,
+    )
+    response['HX-Retarget'] = '#modal-body'
+    response['HX-Reswap'] = 'innerHTML'
+    return response
+
+
 @login_required
 def routine_builder(request):
     routine = get_or_create_default_routine(request.user)
@@ -37,7 +53,7 @@ def block_create(request):
                 'block': block,
                 'is_overlap': block.id in overlapping_ids,
             })
-        return render(request, 'routines/partials/block_form.html', {'form': form}, status=422)
+        return _invalid_block_form_response(request, form)
     return render(request, 'routines/partials/block_form.html', {'form': RoutineBlockForm()})
 
 @login_required
@@ -53,7 +69,7 @@ def block_update(request, block_id):
                 'block': block,
                 'is_overlap': block.id in overlapping_ids,
             })
-        return render(request, 'routines/partials/block_form.html', {'form': form, 'block': block}, status=422)
+        return _invalid_block_form_response(request, form, block)
     return render(request, 'routines/partials/block_form.html', {'form': RoutineBlockForm(instance=block), 'block': block})
 
 @login_required

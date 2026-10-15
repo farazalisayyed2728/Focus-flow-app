@@ -1,0 +1,9 @@
+<div id="timeline-items" class="space-y-2">
+    {% for item in timeline_data.timeline %}
+        {% include "dashboard/partials/occurrence_row.html" with item=item %}
+    {% empty %}
+        <div class="card text-center py-8" style="color: var(--text-muted);">
+            <p class="text-sm">No blocks matching current filter.</p>
+        </div>
+    {% endfor %}
+</div>

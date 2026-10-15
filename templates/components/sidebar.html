@@ -1,36 +1,36 @@
 {% if request.user.is_authenticated or show_shell_nav %}
-<aside class="desktop-sidebar hidden md:flex flex-col w-64 p-6 justify-between select-none" style="background-color: var(--surface); border-right: 1px solid var(--border-subtle);">
-  <div class="space-y-8">
-    <!-- Brand / Logo Card -->
-    <div class="flex items-center gap-3 p-3 rounded-2xl" style="box-shadow: var(--shadow-raised-sm);">
-      <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white shadow-sm" style="background: var(--accent);">
+<aside class="sidebar-container">
+  <div>
+    <!-- App Brand -->
+    <div class="flex items-center gap-3 p-3 rounded-2xl mb-8" style="box-shadow: var(--shadow-raised-sm);">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white shadow-md text-base" style="background: var(--accent);">
         F
       </div>
-      <span class="text-lg font-bold tracking-tight">FocusFlow</span>
+      <span class="text-lg font-extrabold tracking-tight">FocusFlow</span>
     </div>
 
-    <!-- Nav List -->
-    <nav class="space-y-3">
-      <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
+    <!-- Navigation Links -->
+    <nav class="flex flex-col gap-3">
+      <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all hover:text-brand" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
         <span>📊</span> Dashboard
       </a>
-      <a href="{% url 'routine-builder' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
+      <a href="{% url 'routine-builder' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all hover:text-brand" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
         <span>⏱️</span> Routines
       </a>
-      <a href="{% url 'habit-list' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
+      <a href="{% url 'habit-list' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all hover:text-brand" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
         <span>🌱</span> Habits
       </a>
-      <a href="{% url 'weekly-analytics' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
+      <a href="{% url 'weekly-analytics' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all hover:text-brand" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
         <span>📈</span> Analytics
       </a>
-      <a href="{% url 'settings' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
+      <a href="{% url 'settings' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all hover:text-brand" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
         <span>⚙️</span> Settings
       </a>
     </nav>
   </div>
 
-  <div class="space-y-4 pt-4">
-    <!-- Alerts Drawer Toggle -->
+  <div class="flex flex-col gap-3 pt-6 border-t" style="border-color: var(--border-subtle);">
+    <!-- In-App Notification Dropdown -->
     <div class="relative" x-data="{ openTray: false }">
       <button @click="openTray = !openTray" 
               hx-get="{% url 'notification-tray' %}" 
@@ -39,9 +39,7 @@
               style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
         <div class="flex items-center gap-2">
           <span>🔔 Alerts</span>
-          {% if request.user.is_authenticated %}
-            <span id="notif-badge" hx-get="{% url 'notification-unread-count' %}" hx-swap="outerHTML"></span>
-          {% endif %}
+          <span id="notif-badge" hx-get="{% url 'notification-unread-count' %}" hx-swap="outerHTML"></span>
         </div>
       </button>
 

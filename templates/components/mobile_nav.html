@@ -1,14 +1,13 @@
 <nav class="md:hidden fixed bottom-0 left-0 right-0 flex justify-around items-center h-20 px-4 z-40" 
      style="background-color: var(--surface); box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05); border-top: 1px solid var(--border);">
-  <a href="{% url 'dashboard' %}" class="neu-circle-btn text-sm" aria-label="Dashboard">📊</a>
-  <a href="{% url 'routine-builder' %}" class="neu-circle-btn text-sm" aria-label="Routines">⏱️</a>
+  <a href="{% url 'dashboard' %}" class="neu-circle-btn text-base" aria-label="Dashboard">📊</a>
+  <a href="{% url 'routine-builder' %}" class="neu-circle-btn text-base" aria-label="Routines">⏱️</a>
   
-  <!-- Raised Primary Center Button -->
-  <a href="{% url 'routine-builder' %}" class="w-14 h-14 rounded-full flex items-center justify-center text-white text-2xl -mt-6" 
-     style="background: var(--accent); box-shadow: var(--shadow-raised); text-decoration: none;" aria-label="Add Routine Block">
+  <a href="{% url 'routine-builder' %}" class="w-14 h-14 rounded-full flex items-center justify-center text-white text-2xl -mt-6 shadow-lg" 
+     style="background: var(--accent); text-decoration: none;" aria-label="Add Routine Block">
     +
   </a>
   
-  <a href="{% url 'habit-list' %}" class="neu-circle-btn text-sm" aria-label="Habits">🌱</a>
-  <a href="{% url 'weekly-analytics' %}" class="neu-circle-btn text-sm" aria-label="Analytics">📈</a>
+  <a href="{% url 'habit-list' %}" class="neu-circle-btn text-base" aria-label="Habits">🌱</a>
+  <a href="{% url 'weekly-analytics' %}" class="neu-circle-btn text-base" aria-label="Analytics">📈</a>
 </nav>

@@ -7,28 +7,28 @@ from apps.routines.models import Routine
 from apps.tracking.models import ScheduleOccurrence
 
 
-def get_today_timeline_data(user, target_date=None):
-    """
-    Builds the daily timeline, resolving existing occurrences
-    or initializing planned ones idempotently.
-    """
+def get_today_timeline_data(user, target_date=None, category_filter=None, status_filter=None):
     if target_date is None:
         target_date = date.today()
 
     routine = Routine.objects.filter(user=user, is_active=True).first()
     if not routine:
         return {
-            'blocks': [],
+            'timeline': [],
             'active_block': None,
             'next_block': None,
             'completion_pct': 0,
             'planned_minutes': 0,
             'completed_minutes': 0,
+            'target_date': target_date,
         }
 
-    blocks = routine.blocks.filter(is_active=True).order_by('start_time')
+    blocks_qs = routine.blocks.filter(is_active=True).order_by('start_time')
+    if category_filter and category_filter != 'all':
+        blocks_qs = blocks_qs.filter(category=category_filter)
 
-    # Prefetch or create occurrences for today
+    blocks = list(blocks_qs)
+
     occurrences = {
         occ.routine_block_id: occ
         for occ in ScheduleOccurrence.objects.filter(user=user, occurrence_date=target_date)
@@ -51,12 +51,14 @@ def get_today_timeline_data(user, target_date=None):
                 status='planned'
             )
 
+        if status_filter and status_filter != 'all' and occ.status != status_filter:
+            continue
+
         duration = block.duration_minutes
         total_planned += duration
         if occ.status == 'completed':
             total_completed += duration
 
-        # Detect active & next blocks
         is_current = block.start_time <= now_time < block.end_time
         if is_current:
             active_block = block
@@ -69,7 +71,7 @@ def get_today_timeline_data(user, target_date=None):
             'is_current': is_current,
         })
 
-    completion_pct = int(total_completed / total_planned * 100) if total_planned > 0 else 0
+    completion_pct = int((total_completed / total_planned * 100)) if total_planned > 0 else 0
 
     return {
         'timeline': timeline,
@@ -79,6 +81,8 @@ def get_today_timeline_data(user, target_date=None):
         'planned_minutes': total_planned,
         'completed_minutes': total_completed,
         'target_date': target_date,
+        'selected_category': category_filter or 'all',
+        'selected_status': status_filter or 'all',
     }
 
 

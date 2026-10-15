@@ -2,6 +2,8 @@ import os
 import sys
 from pathlib import Path
 
+from celery.schedules import crontab
+
 import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -99,6 +101,14 @@ CACHES = {
 
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 CELERY_TIMEZONE = 'UTC'
+
+
+CELERY_BEAT_SCHEDULE = {
+    'dispatch-reminders-every-5-minutes': {
+        'task': 'apps.reminders.tasks.check_and_dispatch_reminders',
+        'schedule': crontab(minute='*/5'),
+    },
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},

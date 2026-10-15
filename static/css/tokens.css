@@ -1,70 +1,31 @@
 :root {
-  /* Light Neumorphic Palette (Derived from UI 1, UI 3, UI 4, UI 5) */
-  --bg: #e0e5ec;
-  --surface: #e0e5ec;
-  --surface-raised: #e0e5ec;
-  --surface-sunken: #d1d9e6;
-  
+  --bg: #e8ecf2;
+  --surface: #e8ecf2;
   --text: #2d3748;
   --text-muted: #718096;
-  --text-inverted: #ffffff;
-  
-  --border: rgba(255, 255, 255, 0.4);
-  --border-subtle: rgba(163, 177, 198, 0.3);
-
-  /* Primary Accent & Semantic States */
   --accent: #3182ce;
   --accent-hover: #2b6cb0;
-  --accent-subtle: #ebf8ff;
-  --accent-gradient: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-  --success: #38a169;
-  --warning: #dd6b20;
-  --danger: #e53e3e;
+  --border: rgba(255, 255, 255, 0.6);
+  --border-subtle: rgba(163, 177, 198, 0.35);
 
-  /* Neumorphic Shadows (Light Mode: Top-Left White Light, Bottom-Right Dark Shadow) */
-  --shadow-raised: 8px 8px 16px #b8b9be, -8px -8px 16px #ffffff;
-  --shadow-raised-sm: 4px 4px 8px #b8b9be, -4px -4px 8px #ffffff;
-  --shadow-raised-lg: 12px 12px 24px #b8b9be, -12px -12px 24px #ffffff;
-  --shadow-inset: inset 4px 4px 8px #b8b9be, inset -4px -4px 8px #ffffff;
-  --shadow-inset-sm: inset 2px 2px 5px #b8b9be, inset -2px -2px 5px #ffffff;
-
-  /* Layout & Geometry */
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-xl: 32px;
-  --radius-full: 9999px;
-
-  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow-raised: 8px 8px 16px #c5cbd5, -8px -8px 16px #ffffff;
+  --shadow-raised-sm: 4px 4px 8px #c5cbd5, -4px -4px 8px #ffffff;
+  --shadow-inset: inset 4px 4px 8px #c5cbd5, inset -4px -4px 8px #ffffff;
+  --shadow-inset-sm: inset 2px 2px 5px #c5cbd5, inset -2px -2px 5px #ffffff;
 }
 
 [data-theme="dark"] {
-  /* Dark Neumorphic Palette (Derived from UI 2 Dark Mode) */
-  --bg: #1e2024;
-  --surface: #1e2024;
-  --surface-raised: #1e2024;
-  --surface-sunken: #17181c;
-  
+  --bg: #1a1c22;
+  --surface: #1a1c22;
   --text: #e2e8f0;
-  --text-muted: #a0aec0;
-  --text-inverted: #1e2024;
-
+  --text-muted: #94a3b8;
+  --accent: #38bdf8;
+  --accent-hover: #0284c7;
   --border: rgba(255, 255, 255, 0.05);
-  --border-subtle: rgba(0, 0, 0, 0.2);
+  --border-subtle: rgba(0, 0, 0, 0.4);
 
-  --accent: #00d2d3;
-  --accent-hover: #01a3a4;
-  --accent-subtle: #0f2d2e;
-  --accent-gradient: linear-gradient(135deg, #00d2d3 0%, #0abde3 100%);
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-
-  /* Neumorphic Shadows (Dark Mode: Soft Specular & Deep Ambient Cavity) */
-  --shadow-raised: 6px 6px 14px #141518, -6px -6px 14px #282b30;
-  --shadow-raised-sm: 3px 3px 7px #141518, -3px -3px 7px #282b30;
-  --shadow-raised-lg: 10px 10px 20px #141518, -10px -10px 20px #282b30;
-  --shadow-inset: inset 4px 4px 8px #141518, inset -4px -4px 8px #282b30;
-  --shadow-inset-sm: inset 2px 2px 4px #141518, inset -2px -2px 4px #282b30;
+  --shadow-raised: 7px 7px 15px #111216, -7px -7px 15px #23262e;
+  --shadow-raised-sm: 4px 4px 8px #111216, -4px -4px 8px #23262e;
+  --shadow-inset: inset 4px 4px 8px #111216, inset -4px -4px 8px #23262e;
+  --shadow-inset-sm: inset 2px 2px 5px #111216, inset -2px -2px 5px #23262e;
 }

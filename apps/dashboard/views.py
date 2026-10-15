@@ -6,7 +6,13 @@ from apps.tracking.services import get_today_timeline_data, toggle_occurrence_st
 
 @login_required
 def dashboard_view(request):
-    data = get_today_timeline_data(request.user)
+    category = request.GET.get('category', 'all')
+    status = request.GET.get('status', 'all')
+    data = get_today_timeline_data(request.user, category_filter=category, status_filter=status)
+
+    if request.headers.get('HX-Request') and request.GET.get('filter_update'):
+        return render(request, 'dashboard/partials/timeline_list.html', {'timeline_data': data})
+
     return render(request, 'dashboard/index.html', {
         'timeline_data': data,
         'user': request.user,

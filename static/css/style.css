@@ -7,7 +7,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   background-color: var(--bg);
   color: var(--text);
   line-height: 1.5;
@@ -17,7 +17,7 @@ body {
   flex-direction: column;
 }
 
-/* Layout Utilities */
+/* Base Neumorphic Containers */
 .app-container {
   display: flex;
   min-height: 100vh;
@@ -25,96 +25,156 @@ body {
 
 .main-content {
   flex: 1;
-  padding: 1.5rem;
-  max-width: 1200px;
+  padding: 2rem 1.5rem;
+  max-width: 1280px;
   margin: 0 auto;
   width: 100%;
 }
 
 @media (max-width: 768px) {
   .main-content {
-    padding-bottom: 5.5rem; /* space for mobile bottom nav */
+    padding: 1rem;
+    padding-bottom: 6rem;
   }
 }
 
-/* Card Component */
-.card {
-  background-color: var(--surface);
-  border: 1px solid var(--border);
+/* Neumorphic Cards (Raised) */
+.card, .neu-card {
+  background: var(--surface);
   border-radius: var(--radius-lg);
-  padding: 1.25rem;
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: var(--shadow-raised);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
 }
 
-.card:hover {
-  box-shadow: var(--shadow-md);
+.card-sm {
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-raised-sm);
 }
 
-/* Button Component */
+/* Inset Wells (Sunken / Recessed) */
+.neu-sunken {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-inset);
+  border: 1px solid var(--border-subtle);
+  padding: 1rem;
+}
+
+/* Neumorphic Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 500;
-  border-radius: var(--radius-md);
-  padding: 0.5rem 1rem;
+  font-weight: 600;
   font-size: 0.875rem;
+  border-radius: var(--radius-full);
+  padding: 0.625rem 1.25rem;
   cursor: pointer;
-  border: 1px solid transparent;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-  min-height: 44px; /* WCAG touch target */
+  border: none;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-raised-sm);
+  transition: all var(--transition-fast);
+  min-height: 44px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-raised);
+}
+
+.btn:active {
+  transform: translateY(1px);
+  box-shadow: var(--shadow-inset-sm);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .btn-primary {
-  background-color: var(--accent);
+  background: var(--accent);
   color: #ffffff;
+  box-shadow: var(--shadow-raised-sm);
 }
 
 .btn-primary:hover {
-  background-color: var(--accent-hover);
+  background: var(--accent-hover);
+  color: #ffffff;
 }
 
 .btn-secondary {
-  background-color: var(--surface);
-  border-color: var(--border);
+  background: var(--surface);
   color: var(--text);
+  box-shadow: var(--shadow-raised-sm);
 }
 
-.btn-secondary:hover {
-  background-color: var(--surface-muted);
-}
-
-/* Form Controls */
-.input {
+/* Neumorphic Form Controls */
+.input, input[type="text"], input[type="email"], input[type="password"], input[type="time"], select, textarea {
   width: 100%;
-  padding: 0.625rem 0.875rem;
+  padding: 0.75rem 1rem;
   border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background-color: var(--surface);
+  background: var(--surface);
   color: var(--text);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-inset-sm);
   font-size: 0.9375rem;
   min-height: 44px;
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
 }
 
-.input:focus {
-  outline: 2px solid var(--accent);
+.input:focus, select:focus, textarea:focus {
+  outline: none;
+  box-shadow: var(--shadow-inset), 0 0 0 2px var(--accent);
   border-color: transparent;
 }
 
-/* Pill Badges */
+/* Neumorphic Badges & Pills */
 .pill {
   display: inline-flex;
   align-items: center;
   border-radius: var(--radius-full);
-  padding: 0.25rem 0.75rem;
+  padding: 0.35rem 0.85rem;
   font-size: 0.75rem;
   font-weight: 600;
-  background-color: var(--surface-muted);
+  background: var(--surface);
   color: var(--text-muted);
+  box-shadow: var(--shadow-raised-sm);
+  text-decoration: none;
 }
 
 .pill-accent {
-  background-color: var(--accent-subtle);
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.pill-inset {
+  box-shadow: var(--shadow-inset-sm);
+  background: var(--surface);
+}
+
+/* Neumorphic Circle Buttons & Toggles */
+.neu-circle-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  box-shadow: var(--shadow-raised-sm);
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.neu-circle-btn:active, .neu-circle-btn.active {
+  box-shadow: var(--shadow-inset-sm);
   color: var(--accent);
 }

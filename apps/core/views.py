@@ -1,3 +1,5 @@
+import json
+from django.http import JsonResponse
 import time
 import logging
 from django.db import connection
@@ -109,3 +111,22 @@ def pwa_manifest(request):
 
 def offline_view(request):
     return render(request, 'offline.html')
+
+
+
+def assetlinks_json(request):
+    """
+    Serves Digital Asset Links verification required by Google Play Store Trusted Web Activities.
+    """
+    statement = [{
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "app.focusflow.twa",
+            "sha256_cert_fingerprints": [
+                # Replace with production Play Console / Keystore SHA-256 fingerprint upon signing
+                "14:6D:E9:7F:0F:52:EA:CB:25:4B:E0:4E:EF:52:4F:81:C9:E3:4A:26:7A:B2:D2:99:A8:84:87:D5:16:A4:E0:64"
+            ]
+        }
+    }]
+    return JsonResponse(statement, safe=False)

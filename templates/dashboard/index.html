@@ -1,72 +1,76 @@
+
 {% extends "base.html" %}
 
-{% block title %}Today — FocusFlow{% endblock %}
+{% block title %}Dashboard — FocusFlow{% endblock %}
 
 {% block content %}
-<div class="space-y-6 max-w-4xl mx-auto">
-    <!-- Header Greeting -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+<div class="space-y-8 max-w-5xl mx-auto">
+    <!-- Top Greeting Banner -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold tracking-tight">
+            <span class="text-xs font-bold tracking-wider uppercase" style="color: var(--accent);">Focus Command Center</span>
+            <h1 class="text-3xl font-extrabold tracking-tight mt-1">
                 Good day, {{ user.profile.display_name|default:user.username }}
             </h1>
-            <p style="color: var(--text-muted);" class="text-xs">
-                Build your day. One block at a time.
-            </p>
+            <p style="color: var(--text-muted);" class="text-xs mt-0.5">Build your day. One block at a time.</p>
         </div>
-        <div class="text-xs font-semibold px-3 py-1.5 rounded-lg border self-start md:self-auto" style="border-color: var(--border);">
-            {{ timeline_data.target_date|date:"l, d M Y" }}
+        <div class="pill pill-inset text-xs font-bold self-start md:self-auto py-2 px-4">
+            📅 {{ timeline_data.target_date|date:"l, d F Y" }}
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- Progress Summary Card -->
+    <!-- KPI Metric Blocks (UI 5 / UI 6 Inspired) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Progress Summary -->
         {% include "dashboard/partials/progress_summary.html" with completion_pct=timeline_data.completion_pct planned_minutes=timeline_data.planned_minutes completed_minutes=timeline_data.completed_minutes %}
 
         <!-- Active Block Card -->
-        <div class="card">
-            <span class="text-xs font-semibold block mb-1" style="color: var(--text-muted);">CURRENT ACTIVE</span>
-            {% if timeline_data.active_block %}
-                <h3 class="text-base font-bold">{{ timeline_data.active_block.title }}</h3>
-                <p class="text-xs mt-1" style="color: var(--accent);">
-                    {{ timeline_data.active_block.start_time|time:"H:i" }} - {{ timeline_data.active_block.end_time|time:"H:i" }}
-                </p>
-            {% else %}
-                <p class="text-xs text-stone-400 mt-2">No active block right now.</p>
-            {% endif %}
+        <div class="card flex flex-col justify-between">
+            <div>
+                <span class="text-[11px] font-bold uppercase tracking-wider block" style="color: var(--text-muted);">Current Active</span>
+                {% if timeline_data.active_block %}
+                    <h3 class="text-lg font-bold mt-2">{{ timeline_data.active_block.title }}</h3>
+                    <p class="text-xs font-semibold mt-1" style="color: var(--accent);">
+                        {{ timeline_data.active_block.start_time|time:"H:i" }} - {{ timeline_data.active_block.end_time|time:"H:i" }}
+                    </p>
+                {% else %}
+                    <p class="text-xs text-stone-400 mt-4">No block scheduled right now.</p>
+                {% endif %}
+            </div>
+            <span class="pill pill-inset text-[10px] self-start mt-4">Live Execution</span>
         </div>
 
-        <!-- Next Up Card -->
-        <div class="card">
-            <span class="text-xs font-semibold block mb-1" style="color: var(--text-muted);">NEXT UP</span>
-            {% if timeline_data.next_block %}
-                <h3 class="text-base font-bold">{{ timeline_data.next_block.title }}</h3>
-                <p class="text-xs mt-1" style="color: var(--text-muted);">
-                    Starts at {{ timeline_data.next_block.start_time|time:"H:i" }}
-                </p>
-            {% else %}
-                <p class="text-xs text-stone-400 mt-2">You're all caught up for today!</p>
-            {% endif %}
+        <!-- Next Block Card -->
+        <div class="card flex flex-col justify-between">
+            <div>
+                <span class="text-[11px] font-bold uppercase tracking-wider block" style="color: var(--text-muted);">Up Next</span>
+                {% if timeline_data.next_block %}
+                    <h3 class="text-lg font-bold mt-2">{{ timeline_data.next_block.title }}</h3>
+                    <p class="text-xs mt-1" style="color: var(--text-muted);">
+                        Starts at {{ timeline_data.next_block.start_time|time:"H:i" }} ({{ timeline_data.next_block.duration_minutes }}m)
+                    </p>
+                {% else %}
+                    <p class="text-xs text-stone-400 mt-4">All caught up for today!</p>
+                {% endif %}
+            </div>
+            <span class="pill pill-inset text-[10px] self-start mt-4">Upcoming</span>
         </div>
     </div>
 
-    <!-- Pomodoro Focus Section -->
+    <!-- Neumorphic Pomodoro Section -->
     {% include "components/pomodoro.html" %}
 
-    <!-- Timeline Checklist with Filter Bar -->
-    <div class="space-y-3">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div class="flex items-center gap-2">
-                <h2 class="text-sm font-bold uppercase tracking-wider" style="color: var(--text-muted);">Today's Schedule</h2>
-                <a href="{% url 'routine-builder' %}" class="text-xs underline" style="color: var(--accent);">Edit Routine</a>
-            </div>
+    <!-- Today's Schedule Timeline & Category Filters -->
+    <div class="space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h2 class="text-lg font-bold tracking-tight">Today's Schedule</h2>
 
-            <!-- Category Filter Pills -->
-            <div class="flex flex-wrap gap-1 text-xs">
-                <a hx-get="{% url 'dashboard' %}?category=all&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="pill cursor-pointer">All</a>
-                <a hx-get="{% url 'dashboard' %}?category=Study&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="pill cursor-pointer">Study</a>
-                <a hx-get="{% url 'dashboard' %}?category=Work&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="pill cursor-pointer">Work</a>
-                <a hx-get="{% url 'dashboard' %}?category=Fitness&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="pill cursor-pointer">Fitness</a>
+            <!-- Neumorphic Filter Controls -->
+            <div class="flex flex-wrap gap-2 text-xs">
+                <a hx-get="{% url 'dashboard' %}?category=all&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="btn text-xs py-1 px-4">All</a>
+                <a hx-get="{% url 'dashboard' %}?category=Study&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="btn text-xs py-1 px-4">Study</a>
+                <a hx-get="{% url 'dashboard' %}?category=Work&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="btn text-xs py-1 px-4">Work</a>
+                <a hx-get="{% url 'dashboard' %}?category=Fitness&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="btn text-xs py-1 px-4">Fitness</a>
             </div>
         </div>
 

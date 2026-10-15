@@ -21,7 +21,11 @@
     <!-- Routine Block List -->
     <div id="block-list" class="space-y-3">
         {% for block in blocks %}
-            {% include "routines/partials/block_row.html" with block=block is_overlap=block.id in overlapping_ids %}
+            {% if block.id in overlapping_ids %}
+                {% include "routines/partials/block_row.html" with block=block is_overlap=True %}
+            {% else %}
+                {% include "routines/partials/block_row.html" with block=block is_overlap=False %}
+            {% endif %}
         {% empty %}
             <div class="card text-center py-10" style="color: var(--text-muted);">
                 <p class="text-sm font-medium">Your routine is blank.</p>

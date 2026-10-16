@@ -68,20 +68,74 @@ Alpine.data('pomodoro', () => ({
   timeLeft: 25 * 60,
   isRunning: false,
   timer: null,
+  lastUpdatedAt: null,
+  storageKey: 'focusflow_pomodoro',
+  init() {
+    const savedState = JSON.parse(localStorage.getItem(this.storageKey) || '{}');
+    const mode = savedState.currentMode && this.modes[savedState.currentMode]
+      ? savedState.currentMode
+      : this.currentMode;
+
+    this.currentMode = mode;
+    this.timeLeft = typeof savedState.timeLeft === 'number'
+      ? Math.min(this.modes[mode], Math.max(0, savedState.timeLeft))
+      : this.modes[mode];
+    this.isRunning = Boolean(savedState.isRunning);
+    this.lastUpdatedAt = typeof savedState.lastUpdatedAt === 'number'
+      ? savedState.lastUpdatedAt
+      : Date.now();
+
+    if (this.isRunning && this.lastUpdatedAt) {
+      const elapsedSeconds = Math.max(0, Math.floor((Date.now() - this.lastUpdatedAt) / 1000));
+      this.timeLeft = Math.max(0, this.timeLeft - elapsedSeconds);
+
+      if (this.timeLeft === 0) {
+        this.isRunning = false;
+        this.$dispatch('show-toast', {
+          message: 'Focus block finished! Take a break.',
+          type: 'info',
+        });
+      }
+    }
+
+    this.persist();
+
+    if (this.isRunning) {
+      this.start();
+    }
+  },
+  persist() {
+    localStorage.setItem(this.storageKey, JSON.stringify({
+      currentMode: this.currentMode,
+      timeLeft: this.timeLeft,
+      isRunning: this.isRunning,
+      lastUpdatedAt: Date.now(),
+    }));
+  },
   setMode(mode) {
     this.pause();
     this.currentMode = mode;
     this.timeLeft = this.modes[mode];
+    this.persist();
   },
   toggle() {
     if (this.isRunning) this.pause();
     else this.start();
   },
   start() {
+    if (this.timeLeft <= 0) {
+      this.timeLeft = this.modes[this.currentMode];
+    }
+
     this.isRunning = true;
+    this.lastUpdatedAt = Date.now();
+    this.persist();
+
+    if (this.timer) window.clearInterval(this.timer);
     this.timer = window.setInterval(() => {
       if (this.timeLeft > 0) {
-        this.timeLeft--;
+        this.timeLeft -= 1;
+        this.persist();
       } else {
         this.pause();
         this.$dispatch('show-toast', {
@@ -93,11 +147,17 @@ Alpine.data('pomodoro', () => ({
   },
   pause() {
     this.isRunning = false;
-    window.clearInterval(this.timer);
+    if (this.timer) {
+      window.clearInterval(this.timer);
+      this.timer = null;
+    }
+    this.lastUpdatedAt = Date.now();
+    this.persist();
   },
   reset() {
     this.pause();
     this.timeLeft = this.modes[this.currentMode];
+    this.persist();
   },
   formatTime() {
     const minutes = Math.floor(this.timeLeft / 60).toString().padStart(2, '0');

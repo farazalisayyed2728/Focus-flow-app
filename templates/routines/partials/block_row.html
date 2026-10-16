@@ -1,47 +1,52 @@
-<div id="block-row-{{ block.id }}" class="card flex flex-col md:flex-row md:items-center justify-between gap-3 {% if is_overlap %}border-yellow-500 border-2{% endif %}">
-    <div class="flex items-center gap-4">
-        <div class="w-16 text-center">
-            <span class="text-sm font-bold block">{{ block.start_time|time:"H:i" }}</span>
-            <span class="text-xs text-stone-400 block">{{ block.end_time|time:"H:i" }}</span>
+<div id="block-row-{{ block.id }}" class="card flex flex-col sm:flex-row sm:items-center justify-between gap-3 overflow-hidden {% if is_overlap %}border-yellow-500 border-2{% endif %}">
+    <div class="flex items-start sm:items-center gap-3 min-w-0">
+        <!-- Start/End Column -->
+        <div class="neu-sunken py-1.5 px-2.5 text-center shrink-0 min-w-[70px]">
+            <span class="text-xs font-bold block">{{ block.start_time|time:"H:i" }}</span>
+            <span class="text-[10px] text-stone-400 block">{{ block.end_time|time:"H:i" }}</span>
         </div>
 
-        <div>
-            <div class="flex items-center gap-2">
-                <h3 class="font-semibold text-sm">{{ block.title }}</h3>
-                <span class="pill text-xs">{{ block.category }}</span>
+        <!-- Title & Category Info -->
+        <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2 flex-wrap">
+                <h3 class="font-bold text-sm truncate">{{ block.title }}</h3>
+                <span class="pill text-[10px] py-0.5 px-2">{{ block.category }}</span>
                 {% if is_overlap %}
-                    <span class="pill pill-accent text-xs" title="Overlaps with another block">⚠️ Overlap</span>
+                    <span class="pill pill-accent text-[10px] py-0.5 px-1.5">⚠️ Overlap</span>
                 {% endif %}
             </div>
             {% if block.notes %}
-                <p class="text-xs text-stone-500 mt-0.5">{{ block.notes }}</p>
+                <p class="text-xs text-stone-400 truncate mt-0.5">{{ block.notes }}</p>
             {% endif %}
         </div>
     </div>
 
-    <div class="flex items-center gap-2 text-xs">
-        <span class="text-stone-400 mr-2">{{ block.duration_minutes }} min</span>
+    <!-- Actions Toolbar: Wraps on mobile without breaking outside -->
+    <div class="flex items-center justify-between sm:justify-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-stone-800/20 text-xs shrink-0">
+        <span class="text-[11px] text-stone-400 font-semibold">{{ block.duration_minutes }}m</span>
 
-        <button hx-get="{% url 'routine-block-update' block.id %}"
-                hx-target="#modal-body"
-                @click="openModal()"
-                class="btn btn-secondary py-1 px-2.5 text-xs">
-            Edit
-        </button>
+        <div class="flex items-center gap-1.5">
+            <button hx-get="{% url 'routine-block-update' block.id %}"
+                    hx-target="#modal-body"
+                    @click="openModal = true"
+                    class="btn btn-secondary py-1 px-2.5 text-xs">
+                Edit
+            </button>
 
-        <button hx-post="{% url 'routine-block-duplicate' block.id %}"
-                hx-target="#block-list"
-                hx-swap="beforeend"
-                class="btn btn-secondary py-1 px-2.5 text-xs">
-            Duplicate
-        </button>
+            <button hx-post="{% url 'routine-block-duplicate' block.id %}"
+                    hx-target="#block-list"
+                    hx-swap="beforeend"
+                    class="btn btn-secondary py-1 px-2.5 text-xs">
+                Duplicate
+            </button>
 
-        <button hx-post="{% url 'routine-block-delete' block.id %}"
-                hx-target="#block-row-{{ block.id }}"
-                hx-swap="outerHTML"
-                hx-confirm="Are you sure you want to delete this block?"
-                class="btn btn-secondary py-1 px-2.5 text-xs text-red-600 hover:border-red-500">
-            Delete
-        </button>
+            <button hx-post="{% url 'routine-block-delete' block.id %}"
+                    hx-target="#block-row-{{ block.id }}"
+                    hx-swap="outerHTML"
+                    hx-confirm="Are you sure you want to delete this block?"
+                    class="btn btn-secondary py-1 px-2 text-xs text-red-500 hover:text-red-400">
+                ✕
+            </button>
+        </div>
     </div>
 </div>

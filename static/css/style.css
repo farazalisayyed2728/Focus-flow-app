@@ -232,3 +232,35 @@ body {
 .toast-success {
   border-color: var(--accent);
 }
+
+
+/* Mobile Viewport Safeguards */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+@media (max-width: 768px) {
+  /* Enforce full-width box containment on mobile */
+  .card, .neu-card {
+    padding: 1rem !important;
+    border-radius: 16px !important;
+  }
+
+  .content-area {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    padding-bottom: 5.5rem !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Make filter pills horizontally scrollable if they exceed screen width */
+  .filter-pills-container {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+}

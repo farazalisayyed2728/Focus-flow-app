@@ -1,35 +1,39 @@
 <div id="occ-row-{{ item.occurrence.id }}" 
-     class="card flex items-center justify-between gap-4 transition-all {% if item.occurrence.status == 'completed' %}opacity-75 bg-stone-50/50{% endif %} {% if item.is_current %}border-2 border-orange-500 shadow-md{% endif %}">
+     class="card flex items-center justify-between gap-3 overflow-hidden transition-all {% if item.occurrence.status == 'completed' %}opacity-75{% endif %} {% if item.is_current %}border-2 border-brand{% endif %}">
     
-    <div class="flex items-center gap-3">
-        <!-- Quick Complete Checkbox -->
+    <div class="flex items-center gap-3 min-w-0 flex-1">
+        <!-- Quick Check Button -->
         <button hx-post="{% url 'toggle-occurrence' item.occurrence.id %}"
                 hx-target="#occ-row-{{ item.occurrence.id }}"
                 hx-swap="outerHTML"
-                class="w-7 h-7 rounded-full flex items-center justify-center border transition-colors cursor-pointer"
-                style="{% if item.occurrence.status == 'completed' %}background-color: var(--accent); border-color: var(--accent); color: white;{% else %}border-color: var(--border);{% endif %}"
+                class="w-8 h-8 rounded-full flex items-center justify-center border transition-all shrink-0 cursor-pointer"
+                style="{% if item.occurrence.status == 'completed' %}background: var(--accent); border-color: var(--accent); color: white;{% else %}box-shadow: var(--shadow-inset-sm); border-color: var(--border-subtle);{% endif %}"
                 aria-label="Toggle Complete">
             {% if item.occurrence.status == 'completed' %}✓{% endif %}
         </button>
 
-        <div>
-            <div class="flex items-center gap-2">
-                <span class="text-sm font-semibold {% if item.occurrence.status == 'completed' %}line-through text-stone-400{% endif %}">
+        <!-- Block Info (Truncates smoothly on mobile) -->
+        <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="text-xs sm:text-sm font-bold truncate {% if item.occurrence.status == 'completed' %}line-through text-stone-500{% endif %}">
                     {{ item.block.title }}
                 </span>
-                <span class="pill text-xs">{{ item.block.category }}</span>
+                <span class="pill text-[10px] py-0.5 px-2">{{ item.block.category }}</span>
                 {% if item.is_current %}
-                    <span class="pill pill-accent text-xs">Active Now</span>
+                    <span class="pill pill-accent text-[10px] py-0.5 px-1.5">Active</span>
                 {% endif %}
             </div>
-            <p class="text-xs" style="color: var(--text-muted);">
+            <p class="text-[11px] truncate mt-0.5" style="color: var(--text-muted);">
                 {{ item.block.start_time|time:"H:i" }} - {{ item.block.end_time|time:"H:i" }} ({{ item.block.duration_minutes }}m)
             </p>
         </div>
     </div>
 
-    <div class="text-xs">
-        <span class="pill">{{ item.occurrence.get_status_display }}</span>
+    <!-- Status Badge -->
+    <div class="shrink-0">
+        <span class="pill pill-inset text-[10px] py-1 px-2.5 font-bold">
+            {{ item.occurrence.get_status_display }}
+        </span>
     </div>
 </div>
 

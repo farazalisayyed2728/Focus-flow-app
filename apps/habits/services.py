@@ -42,27 +42,26 @@ def calculate_habit_streak(habit, ref_date=None):
 
     return streak
 
+from django.db import transaction
+
 def toggle_habit_status(habit, target_date=None):
-    """
-    Idempotent toggle of completion for a given date.
-    """
     if target_date is None:
         target_date = date.today()
 
-    occ, _ = HabitOccurrence.objects.get_or_create(
-        habit=habit,
-        user=habit.user,
-        occurrence_date=target_date,
-    )
-
-    if occ.status == 'completed':
-        occ.status = 'pending'
-        occ.completed_at = None
-    else:
-        occ.status = 'completed'
-        occ.completed_at = timezone.now()
-    occ.save()
-    return occ
+    with transaction.atomic():
+        occ, _ = HabitOccurrence.objects.select_for_update().get_or_create(
+            habit=habit,
+            user=habit.user,
+            occurrence_date=target_date,
+        )
+        if occ.status == 'completed':
+            occ.status = 'pending'
+            occ.completed_at = None
+        else:
+            occ.status = 'completed'
+            occ.completed_at = timezone.now()
+        occ.save()
+        return occ
 
 def get_habit_week_history(habit, end_date=None):
     """

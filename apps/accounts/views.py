@@ -2,6 +2,7 @@ from django.contrib.auth import login, logout,authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render
+from django.tasks import Task
 
 from .forms import OnboardingForm, SignUpForm
 
@@ -150,3 +151,26 @@ def login_view(request):
         form = AuthenticationForm()
 
     return render(request, 'accounts/login.html', {'form': form})
+
+
+import csv
+from django.http import HttpResponse
+
+@login_required
+def export_tasks_csv(request):
+    """
+    Exports all tasks belonging to the authenticated user in CSV format.
+    """
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="tasks_{request.user.username}.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Title', 'Priority', 'Status', 'Due Date', 'Estimated Mins', 'Actual Mins', 'Completed At'])
+
+    tasks = Task.objects.filter(user=request.user).values_list(
+        'title', 'priority', 'status', 'due_date', 'estimated_minutes', 'actual_minutes', 'completed_at'
+    )
+    for t in tasks:
+        writer.writerow(t)
+
+    return response

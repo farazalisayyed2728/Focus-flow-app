@@ -108,8 +108,15 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'apps.reminders.tasks.check_and_dispatch_reminders',
         'schedule': crontab(minute='*/5'),
     },
+    'check-deadlines-every-hour': {
+        'task': 'apps.reminders.tasks.check_task_deadlines',
+        'schedule': crontab(minute=0, hour='*'),
+    },
+    'weekly-summary-sunday-night': {
+        'task': 'apps.reminders.tasks.generate_weekly_productivity_summaries',
+        'schedule': crontab(minute=0, hour=20, day_of_week='sun'),
+    },
 }
-
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},

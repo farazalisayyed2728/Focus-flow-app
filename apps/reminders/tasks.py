@@ -9,6 +9,15 @@ from apps.notifications.models import Notification
 from apps.notifications.services import create_in_app_notification
 from apps.reminders.models import Reminder
 
+
+from datetime import date, timedelta
+from celery import shared_task
+from django.contrib.auth.models import User
+from apps.tracking.models import Task
+from apps.notifications.services import create_in_app_notification
+from apps.notifications.models import Notification
+from apps.analytics.services import calculate_weekly_metrics
+
 logger = logging.getLogger(__name__)
 
 @shared_task
@@ -73,3 +82,47 @@ def check_and_dispatch_reminders():
                         dispatched += 1
 
     return f"Dispatched {dispatched} reminders."
+
+
+
+
+@shared_task
+def check_task_deadlines():
+    """
+    Checks for overdue tasks and triggers an in-app alert.
+    """
+    today = date.today()
+    overdue_tasks = Task.objects.filter(
+        status='pending',
+        due_date__lt=today
+    ).select_related('user')
+
+    alerts_sent = 0
+    for task in overdue_tasks:
+        notif = create_in_app_notification(
+            user=task.user,
+            title=f"Overdue Task: {task.title}",
+            body=f"This task was due on {task.due_date}. Tap to reschedule or mark complete.",
+            notification_type=Notification.TYPE_SYSTEM
+        )
+        if notif:
+            alerts_sent += 1
+    return f"Sent {alerts_sent} deadline alerts."
+
+@shared_task
+def generate_weekly_productivity_summaries():
+    """
+    Runs every Sunday evening to calculate weekly reports for active users.
+    """
+    users = User.objects.filter(is_active=True)
+    count = 0
+    for user in users:
+        metrics = calculate_weekly_metrics(user)
+        create_in_app_notification(
+            user=user,
+            title="Your Weekly Productivity Summary is Ready",
+            body=f"You completed {metrics['total_completed_hours']}h of focused work this week. Completion rate: {metrics['completion_rate']}%.",
+            notification_type=Notification.TYPE_SYSTEM
+        )
+        count += 1
+    return f"Generated {count} weekly summaries."

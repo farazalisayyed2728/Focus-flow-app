@@ -1,4 +1,4 @@
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout,authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render
@@ -12,10 +12,6 @@ from apps.notifications.models import NotificationPreference
 from .forms import ProfileSettingsForm, NotificationPreferenceForm, AccountDeleteConfirmationForm
 from .services import compile_user_data_export
 from apps.core.ratelimit import rate_limit
-
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import AuthenticationForm
 
 
 def signup_view(request):

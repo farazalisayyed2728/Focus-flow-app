@@ -5,6 +5,16 @@ from apps.core.views import HealthCheckView, assetlinks_json, offline_view, pwa_
 from apps.dashboard.views import dashboard_view
 from apps.core.views import HealthCheckView, ReadinessCheckView, shell_preview
 
+
+from rest_framework.routers import DefaultRouter
+from apps.tracking.api_views import TaskViewSet, FocusSessionViewSet, HabitViewSet
+
+router = DefaultRouter()
+router.register(r'tasks', TaskViewSet, basename='api-tasks')
+router.register(r'focus-sessions', FocusSessionViewSet, basename='api-focus-sessions')
+router.register(r'habits', HabitViewSet, basename='api-habits')
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('.well-known/assetlinks.json', assetlinks_json, name='assetlinks-json'),
@@ -23,4 +33,5 @@ urlpatterns = [
     path('reminders/', include('apps.reminders.urls')),
     path('analytics/', include('apps.analytics.urls')),
     path('', include('apps.core.urls')),
+    path('api/', include(router.urls)),
 ]

@@ -3,6 +3,10 @@ from apps.habits.models import Habit, HabitOccurrence
 from apps.tracking.models import ScheduleOccurrence
 import calendar
 
+from django.db.models import Count, Sum, Avg, Q
+from apps.tracking.models import ScheduleOccurrence, Task, FocusSession
+
+
 
 
 def calculate_weekly_metrics(user, ref_date=None):
@@ -284,3 +288,70 @@ def get_cached_weekly_metrics(user, ref_date=None):
     # Cache for 10 minutes (600 seconds)
     cache.set(key, fresh_metrics, timeout=600)
     return fresh_metrics
+
+
+def calculate_productivity_score(user, target_date=None):
+    """
+    Computes a deterministic Daily Productivity Score (0 to 100) based on:
+    - Task Completion Rate (40% weight)
+    - Routine Execution (30% weight)
+    - Habit Consistency (30% weight)
+    """
+    if target_date is None:
+        target_date = date.today()
+
+    # 1. Tasks
+    task_stats = Task.objects.filter(user=user, due_date=target_date).aggregate(
+        total=Count('id'),
+        completed=Count('id', filter=Q(status='completed'))
+    )
+    task_rate = (task_stats['completed'] / task_stats['total']) if task_stats['total'] > 0 else 1.0
+
+    # 2. Routine Schedule
+    occ_stats = ScheduleOccurrence.objects.filter(user=user, occurrence_date=target_date).aggregate(
+        total=Count('id'),
+        completed=Count('id', filter=Q(status='completed'))
+    )
+    routine_rate = (occ_stats['completed'] / occ_stats['total']) if occ_stats['total'] > 0 else 1.0
+
+    # 3. Habits
+    active_habits_count = Habit.objects.filter(user=user, is_paused=False, is_archived=False).count()
+    habit_completed_count = HabitOccurrence.objects.filter(
+        user=user, occurrence_date=target_date, status='completed'
+    ).count()
+    habit_rate = (habit_completed_count / active_habits_count) if active_habits_count > 0 else 1.0
+
+    score = int((task_rate * 40) + (routine_rate * 30) + (habit_rate * 30))
+    return min(max(score, 0), 100)
+
+def calculate_week_over_week_comparison(user, ref_date=None):
+    """
+    Measures productivity delta comparing the current week to the previous week.
+    """
+    if ref_date is None:
+        ref_date = date.today()
+
+    curr_start = ref_date - timedelta(days=ref_date.weekday())
+    curr_end = curr_start + timedelta(days=6)
+
+    prev_start = curr_start - timedelta(days=7)
+    prev_end = curr_start - timedelta(days=1)
+
+    curr_minutes = ScheduleOccurrence.objects.filter(
+        user=user, occurrence_date__range=(curr_start, curr_end), status='completed'
+    ).aggregate(total=Sum('actual_minutes'))['total'] or 0
+
+    prev_minutes = ScheduleOccurrence.objects.filter(
+        user=user, occurrence_date__range=(prev_start, prev_end), status='completed'
+    ).aggregate(total=Sum('actual_minutes'))['total'] or 0
+
+    if prev_minutes > 0:
+        improvement_pct = round(((curr_minutes - prev_minutes) / prev_minutes) * 100, 1)
+    else:
+        improvement_pct = 100.0 if curr_minutes > 0 else 0.0
+
+    return {
+        'current_week_hours': round(curr_minutes / 60, 1),
+        'previous_week_hours': round(prev_minutes / 60, 1),
+        'improvement_pct': improvement_pct,
+    }

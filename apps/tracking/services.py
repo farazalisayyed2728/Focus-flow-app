@@ -1,10 +1,11 @@
 from datetime import date, datetime, timedelta
 
 from django.utils import timezone
+from django.db import transaction
 
 from django.core.cache import cache
 from apps.routines.models import Routine
-from apps.tracking.models import ScheduleOccurrence
+from apps.tracking.models import ScheduleOccurrence, Task
 
 
 def get_today_timeline_data(user, target_date=None, category_filter=None, status_filter=None):
@@ -102,3 +103,20 @@ def toggle_occurrence_status(user, occurrence_id):
     cache.delete(f"analytics:weekly:{user.id}:{occ.occurrence_date - timedelta(days=occ.occurrence_date.weekday())}")
     cache.delete(f"analytics:monthly:{user.id}:{occ.occurrence_date.year}:{occ.occurrence_date.month}")
     return occ
+
+
+
+def safe_toggle_task_status(user, task_id):
+    """
+    Concurrency-safe task completion with row locking.
+    """
+    with transaction.atomic():
+        task = Task.objects.select_for_update().get(id=task_id, user=user)
+        if task.status == 'completed':
+            task.status = 'pending'
+            task.completed_at = None
+        else:
+            task.status = 'completed'
+            task.completed_at = timezone.now()
+        task.save()
+        return task

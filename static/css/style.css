@@ -2,156 +2,114 @@
 
 *, *::before, *::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+}
+
+[x-cloak] {
+  display: none !important;
 }
 
 body {
   background-color: var(--bg);
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
 }
 
-/* Two-column App Layout */
+/* Structural Shell Layout */
 .app-layout {
-  display: flex !important;
-  flex-direction: row !important;
+  display: flex;
   min-height: 100vh;
   width: 100%;
+  position: relative;
 }
 
-/* Sticky Desktop Sidebar */
-.desktop-sidebar.sidebar-container {
-  width: 260px !important;
-  min-width: 260px !important;
-  max-width: 260px !important;
-  height: 100vh;
-  position: sticky;
-  top: 0;
-  left: 0;
+.sidebar-container {
+  width: 260px;
+  min-width: 260px;
   background-color: var(--surface);
   border-right: 1px solid var(--border-subtle);
   padding: 1.5rem 1.25rem;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
-  flex-shrink: 0;
-  z-index: 40;
-}
-
-.sidebar-top {
   display: flex;
   flex-direction: column;
-}
-
-.brand-card {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-radius: 1rem;
-  box-shadow: var(--shadow-raised-sm);
-  margin-bottom: 2rem;
-}
-
-.brand-icon {
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 0.75rem;
-  background: var(--accent);
-  color: #fff;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.brand-name {
-  font-weight: 800;
-  font-size: 1.15rem;
-  color: var(--text);
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.sidebar-link {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.85rem 1.15rem;
-  border-radius: 1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text);
-  box-shadow: var(--shadow-raised-sm);
-  text-decoration: none;
-  transition: all 0.15s ease;
-}
-
-.sidebar-link:hover {
-  transform: translateY(-1px);
-  color: var(--accent);
-}
-
-.sidebar-bottom {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.sidebar-control-btn {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  box-shadow: var(--shadow-raised-sm);
-  color: var(--text);
-  background: var(--surface);
-  border: none;
-  cursor: pointer;
 }
 
-.control-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.tray-popup-sidebar {
-  position: absolute;
-  left: 0;
-  bottom: 4rem;
-  width: 17rem;
-  background: var(--surface);
-  box-shadow: var(--shadow-raised-lg);
-  border-radius: 1rem;
-  border: 1px solid var(--border);
-  overflow: hidden;
-  z-index: 50;
-}
-
-/* Main Content Area */
 .content-area {
-  flex: 1 1 0% !important;
-  min-width: 0 !important;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
   padding: 2.5rem 3rem;
   max-width: 1200px;
   margin: 0 auto;
   overflow-y: auto;
 }
 
-/* Neumorphic Cards & Components */
+.mobile-bottom-nav {
+  display: none;
+}
+
+.mobile-nav-add {
+  width: 3rem;
+  height: 3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -1.25rem;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 1.5rem;
+  text-decoration: none;
+  background: var(--accent);
+  box-shadow: var(--shadow-raised);
+}
+
+.weekly-kpi-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .weekly-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .weekly-kpi-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar-container {
+    display: none !important;
+  }
+
+  .content-area {
+    padding: 1rem 1rem 6rem !important;
+  }
+
+  .mobile-bottom-nav {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background-color: var(--surface);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 1rem;
+    z-index: 50;
+  }
+}
+
+/* Neumorphic Components */
 .card, .neu-card {
   background: var(--surface);
   border-radius: 20px;
@@ -198,6 +156,7 @@ body {
 .btn-primary {
   background: var(--accent) !important;
   color: #ffffff !important;
+  box-shadow: var(--shadow-raised-sm);
 }
 
 .btn-secondary {
@@ -205,6 +164,7 @@ body {
   color: var(--text);
 }
 
+/* Form Controls */
 .input, input[type="text"], input[type="email"], input[type="password"], input[type="time"], select, textarea {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -222,6 +182,7 @@ body {
   border-color: var(--accent);
 }
 
+/* Pills & Badges */
 .pill {
   display: inline-flex;
   align-items: center;
@@ -245,6 +206,7 @@ body {
   color: #ffffff;
 }
 
+/* Circular Actions */
 .neu-circle-btn {
   width: 44px;
   height: 44px;
@@ -259,59 +221,46 @@ body {
   cursor: pointer;
   text-decoration: none;
 }
+.neu-circle-btn:active {
+  box-shadow: var(--shadow-inset-sm);
+}
 
-/* Mobile Visibility (Hidden on Desktop) */
-.mobile-top-bar, .mobile-bottom-nav {
-  display: none;
+.toast-error {
+  border-color: var(--danger);
+}
+
+.toast-success {
+  border-color: var(--accent);
+}
+
+
+/* Mobile Viewport Safeguards */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 @media (max-width: 768px) {
-  .desktop-sidebar.sidebar-container {
-    display: none !important;
-  }
-
-  .mobile-top-bar {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 1rem;
-    background-color: var(--surface);
-    border-bottom: 1px solid var(--border-subtle);
-    position: sticky;
-    top: 0;
-    z-index: 40;
-  }
-
-  .tray-popup {
-    position: absolute;
-    right: 0;
-    top: 2.75rem;
-    width: 18rem;
-    background: var(--surface);
-    box-shadow: var(--shadow-raised-lg);
-    border-radius: 1rem;
-    border: 1px solid var(--border);
-    overflow: hidden;
-    z-index: 50;
+  /* Enforce full-width box containment on mobile */
+  .card, .neu-card {
+    padding: 1rem !important;
+    border-radius: 16px !important;
   }
 
   .content-area {
-    padding: 1rem 1rem 6rem 1rem !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    padding-bottom: 5.5rem !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
   }
 
-  .mobile-bottom-nav {
-    display: flex !important;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 65px;
-    background-color: var(--surface);
-    border-top: 1px solid var(--border);
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
-    justify-content: space-around;
-    align-items: center;
-    padding: 0 1rem;
-    z-index: 50;
+  /* Make filter pills horizontally scrollable if they exceed screen width */
+  .filter-pills-container {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
   }
 }

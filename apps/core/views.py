@@ -125,7 +125,8 @@ def assetlinks_json(request):
             "package_name": "app.focusflow.twa",
             "sha256_cert_fingerprints": [
                 # Replace with production Play Console / Keystore SHA-256 fingerprint upon signing
-                "14:6D:E9:7F:0F:52:EA:CB:25:4B:E0:4E:EF:52:4F:81:C9:E3:4A:26:7A:B2:D2:99:A8:84:87:D5:16:A4:E0:64"
+                "13:AB:91:CA:97:72:E6:BB:EA:09:C5:E4:BB:E8:26:25:95:AE:99:22:B1:07:DC:1C:99:49:20:81:1D:3E:B0:B7"
+            
             ]
         }
     }]

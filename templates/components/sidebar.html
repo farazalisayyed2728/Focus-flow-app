@@ -1,5 +1,5 @@
 {% if request.user.is_authenticated or show_shell_nav %}
-<asid<aside class="desktop-sidebar sidebar-container">
+<aside class="desktop-sidebar sidebar-container">
   <div class="sidebar-top">
     <!-- Brand -->
     <div class="brand-card">
@@ -27,7 +27,7 @@
     </nav>
   </div>
 
-  <!-- Pinned Bottom Controls (Never scrolls out of view) -->
+  <!-- Pinned Bottom Controls (Always visible, no scrolling needed) -->
   <div class="sidebar-bottom">
     <div class="relative" x-data="{ openTray: false }">
       <button type="button"

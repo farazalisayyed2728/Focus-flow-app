@@ -1,40 +1,20 @@
-<div class="card space-y-4 overflow-hidden" x-data="pomodoro">
-    <!-- Header: Stacks neatly on mobile, row on desktop -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-center sm:text-left">
-        <span class="text-xs font-bold uppercase tracking-wider" style="color: var(--text-muted);">
-            Tactile Focus Timer
-        </span>
-
-        <div class="flex items-center justify-center gap-1.5 flex-wrap">
-            <button type="button" @click="setMode('focus')" :class="currentMode === 'focus' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">
-                Focus
-            </button>
-            <button type="button" @click="setMode('short')" :class="currentMode === 'short' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">
-                Short Break
-            </button>
-            <button type="button" @click="setMode('long')" :class="currentMode === 'long' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">
-                Long Break
-            </button>
+<div class="card space-y-4" x-data="pomodoro">
+    <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider" style="color: var(--text-muted);">Tactile Focus Timer</span>
+        <div class="flex gap-2">
+            <button type="button" @click="setMode('focus')" :class="currentMode === 'focus' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1.5 px-4 font-bold">Focus</button>
+            <button type="button" @click="setMode('short')" :class="currentMode === 'short' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1.5 px-4 font-bold">Short Break</button>
+            <button type="button" @click="setMode('long')" :class="currentMode === 'long' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1.5 px-4 font-bold">Long Break</button>
         </div>
     </div>
 
-    <!-- Recessed Clock Display Wells -->
-    <div class="neu-sunken text-center py-5 sm:py-6 max-w-xs mx-auto w-full">
-        <div class="text-4xl sm:text-5xl font-black tracking-tight" style="color: var(--text);" x-text="formatTime()">25:00</div>
+    <!-- Recessed Clock Well -->
+    <div class="neu-sunken text-center py-6 max-w-sm mx-auto w-full">
+        <div class="text-5xl font-black tracking-tight" style="color: var(--text);" x-text="formatTime()">25:00</div>
     </div>
 
-    <!-- Action Buttons with guaranteed touch width -->
-    <div class="flex justify-center items-center gap-4">
-        <button type="button" 
-                @click="toggle()" 
-                class="btn btn-primary min-w-[130px] px-6 sm:px-8 text-xs sm:text-sm font-bold flex items-center justify-center">
-            <span x-text="isRunning ? 'Pause' : 'Start Focus'">Start Focus</span>
-        </button>
-
-        <button type="button" 
-                @click="reset()" 
-                class="btn btn-secondary min-w-[90px] px-5 sm:px-6 text-xs sm:text-sm font-semibold">
-            Reset
-        </button>
+    <div class="flex justify-center items-center gap-4 pt-1">
+        <button type="button" @click="toggle()" class="btn btn-primary min-w-[130px] px-8 py-2.5 text-xs font-bold" x-text="isRunning ? 'Pause' : 'Start Focus'">Start Focus</button>
+        <button type="button" @click="reset()" class="btn btn-secondary min-w-[90px] px-6 py-2.5 text-xs font-semibold">Reset</button>
     </div>
 </div>

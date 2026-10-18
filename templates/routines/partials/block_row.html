@@ -26,7 +26,8 @@
         <span class="text-[11px] text-stone-400 font-semibold">{{ block.duration_minutes }}m</span>
 
         <div class="flex items-center gap-1.5">
-            <button hx-get="{% url 'routine-block-update' block.id %}"
+            <button type="button"
+                    hx-get="{% url 'routine-block-update' block.id %}"
                     hx-target="#modal-body"
                     @click="openModal = true"
                     class="btn btn-secondary py-1 px-2.5 text-xs">

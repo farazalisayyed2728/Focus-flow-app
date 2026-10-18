@@ -1,84 +1,81 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" x-data="theme" @toggle-theme.window="toggleTheme()">
+<html lang="en" data-theme="light" x-data="theme" @toggle-theme.window="toggleTheme()">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#1a1c22">
+    <meta name="theme-color" content="#3182ce">
     <title>{% block title %}FocusFlow{% endblock %}</title>
     
+    <!-- PWA Manifest -->
     <link rel="manifest" href="{% url 'pwa-manifest' %}">
 
-    <!-- Tailwind CDN for layout grid & flex utilities -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: ['class', '[data-theme="dark"]'],
-            theme: {
-                extend: {
-                    colors: {
-                        brand: '#38bdf8',
-                    }
-                }
-            }
-        }
-    </script>
-
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
     <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
+    <!-- Prevent Alpine.js content flash -->
     <style>
         [x-cloak] { display: none !important; }
     </style>
 
+    <!-- HTMX & Alpine.js -->
     <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
     <script type="module" src="{% static 'js/app.js' %}"></script>
 </head>
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
-    <!-- Top Floating Header Bar (As seen in Screenshot) -->
+    <!-- Mobile Top Header (Restricted to logged-in users only) -->
     {% if request.user.is_authenticated %}
-    <header class="top-nav-bar flex items-center justify-between px-6 py-3 border-b" style="background-color: var(--surface); border-color: var(--border-subtle);">
-        <div class="flex items-center gap-3">
-            <div class="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-white text-xs" style="background: var(--accent);">F</div>
-            <span class="font-extrabold text-sm tracking-tight" style="color: var(--text);">FocusFlow</span>
+    <header class="md:hidden flex items-center justify-between px-4 py-3 border-b" 
+            style="background-color: var(--surface); border-color: var(--border-subtle);">
+        <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-white text-xs" 
+                 style="background: var(--accent);">F</div>
+            <span class="font-extrabold text-sm tracking-tight">FocusFlow</span>
         </div>
         
         <div class="flex items-center gap-3">
+            <!-- Compact Mobile Alert Icon -->
             <div class="relative" x-data="{ openTray: false }">
-                <button type="button"
-                        @click="openTray = !openTray" 
+                <button @click="openTray = !openTray" 
                         hx-get="{% url 'notification-tray' %}" 
-                        hx-target="#top-tray-dropdown"
+                        hx-target="#mobile-tray-dropdown"
                         class="neu-circle-btn w-9 h-9 text-xs"
                         aria-label="Alerts">
                     🔔
                     <span id="notif-badge" hx-get="{% url 'notification-unread-count' %}" hx-swap="outerHTML"></span>
                 </button>
-                <div id="top-tray-dropdown" 
+                <div id="mobile-tray-dropdown" 
                      x-show="openTray" 
                      @click.away="openTray = false" 
                      x-cloak 
-                     class="absolute right-0 top-12 w-72 card p-0 overflow-hidden z-50 shadow-2xl">
+                     class="absolute right-0 top-11 w-72 card p-0 overflow-hidden z-50 shadow-2xl">
                 </div>
             </div>
 
-            <button type="button" @click="toggleTheme()" class="neu-circle-btn w-9 h-9 text-xs" aria-label="Toggle Theme">
+            <!-- Mobile Theme Toggle -->
+            <button @click="toggleTheme()" class="neu-circle-btn w-9 h-9 text-xs" aria-label="Toggle Theme">
                 🌓
             </button>
         </div>
     </header>
     {% endif %}
 
-    <!-- Main Container -->
-    <div class="app-layout flex">
+    <!-- Main Layout Shell -->
+    <div class="app-layout">
         {% if request.user.is_authenticated %}
             {% include "components/sidebar.html" %}
         {% endif %}
 
-        <main class="content-area flex-1">
+        <main class="content-area">
             {% block content %}{% endblock %}
         </main>
+
+        {% if request.user.is_authenticated %}
+            {% include "components/mobile_nav.html" %}
+        {% endif %}
     </div>
 
     {% include "components/toast.html" %}

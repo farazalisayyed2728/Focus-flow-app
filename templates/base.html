@@ -7,7 +7,25 @@
     <meta name="theme-color" content="#3182ce">
     <title>{% block title %}FocusFlow{% endblock %}</title>
     
+    <!-- PWA Manifest -->
     <link rel="manifest" href="{% url 'pwa-manifest' %}">
+
+    <!-- Tailwind CDN for layout utilities -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: ['class', '[data-theme="dark"]'],
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#3182ce',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Project Stylesheets -->
     <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
@@ -15,20 +33,21 @@
         [x-cloak] { display: none !important; }
     </style>
 
+    <!-- HTMX & Alpine Application Bundle -->
     <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
     <script type="module" src="{% static 'js/app.js' %}"></script>
 </head>
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<body class="min-h-screen flex flex-col" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
-    <!-- Mobile-Only Top Navigation Bar (Hidden on Desktop via CSS) -->
+    <!-- Mobile-Only Top Bar -->
     {% if request.user.is_authenticated %}
     <header class="mobile-top-bar">
-        <div class="brand-badge">
-            <div class="logo-box">F</div>
-            <span class="logo-text">FocusFlow</span>
+        <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-white text-xs bg-brand">F</div>
+            <span class="font-extrabold text-sm tracking-tight">FocusFlow</span>
         </div>
         
-        <div class="mobile-header-actions">
+        <div class="flex items-center gap-3">
             <div class="relative" x-data="{ openTray: false }">
                 <button type="button"
                         @click="openTray = !openTray" 
@@ -54,7 +73,7 @@
     </header>
     {% endif %}
 
-    <!-- Main Application Grid -->
+    <!-- Main Flex Shell -->
     <div class="app-layout">
         {% if request.user.is_authenticated %}
             {% include "components/sidebar.html" %}

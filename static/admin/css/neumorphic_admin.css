@@ -1,37 +1,35 @@
 :root {
-  --admin-bg: #1a1c22;
+  --admin-bg: #14161b;
   --admin-surface: #1a1c22;
-  --admin-surface-card: #20232a;
-  --admin-text: #e2e8f0;
+  --admin-surface-elevated: #21242c;
+  --admin-text: #f1f5f9;
   --admin-text-muted: #94a3b8;
   --admin-accent: #38bdf8;
-  --admin-accent-hover: #0284c7;
-  --admin-border: rgba(255, 255, 255, 0.06);
+  --admin-accent-hover: #0ea5e9;
+  --admin-border: rgba(255, 255, 255, 0.07);
 
-  --neu-shadow: 7px 7px 15px #111216, -7px -7px 15px #23262e;
-  --neu-shadow-sm: 4px 4px 8px #111216, -4px -4px 8px #23262e;
-  --neu-shadow-inset: inset 3px 3px 6px #111216, inset -3px -3px 6px #23262e;
+  --neu-raised: 8px 8px 18px #0e0f13, -8px -8px 18px #22252d;
+  --neu-raised-sm: 4px 4px 10px #0e0f13, -4px -4px 10px #22252d;
+  --neu-inset: inset 3px 3px 6px #0e0f13, inset -3px -3px 6px #22252d;
 }
 
-body {
+/* Background & Global Reset */
+html, body {
   background-color: var(--admin-bg) !important;
   color: var(--admin-text) !important;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
-/* Header & Navigation Bar */
-#header {
-  background: var(--admin-surface) !important;
-  box-shadow: var(--neu-shadow-sm) !important;
-  border-bottom: 1px solid var(--admin-border) !important;
-  padding: 1rem 2rem !important;
+#container {
+  background: transparent !important;
 }
 
-#branding h1, #branding h1 a:link, #branding h1 a:visited {
-  color: var(--admin-accent) !important;
-  font-weight: 900 !important;
-  letter-spacing: -0.02em !important;
-  font-size: 1.25rem !important;
+/* Header & Top Bar */
+#header {
+  background: var(--admin-surface) !important;
+  border-bottom: 1px solid var(--admin-border) !important;
+  padding: 1.1rem 2.5rem !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
 }
 
 #user-tools {
@@ -44,38 +42,66 @@ body {
   font-weight: 600 !important;
 }
 
-/* Breadcrumbs */
+/* Breadcrumbs Bar */
 div.breadcrumbs {
-  background: transparent !important;
-  border: none !important;
+  background: var(--admin-bg) !important;
+  border-bottom: 1px solid var(--admin-border) !important;
   color: var(--admin-text-muted) !important;
-  padding: 1rem 2rem !important;
-  font-size: 0.8rem !important;
+  padding: 0.9rem 2.5rem !important;
+  font-size: 0.82rem !important;
 }
 
 div.breadcrumbs a {
   color: var(--admin-accent) !important;
+  font-weight: 600 !important;
 }
 
-/* Container & Modules (Cards) */
-.module, .inline-group, #changelist-filter {
+/* Sidebar & Navigation Panels */
+#nav-sidebar {
   background: var(--admin-surface) !important;
-  border-radius: 18px !important;
-  box-shadow: var(--neu-shadow) !important;
+  border-right: 1px solid var(--admin-border) !important;
+  box-shadow: 4px 0 15px rgba(0,0,0,0.2) !important;
+}
+
+#nav-sidebar .module th {
+  background: transparent !important;
+}
+
+#nav-sidebar .module caption {
+  background: var(--admin-surface-elevated) !important;
+  color: var(--admin-accent) !important;
+  font-weight: 800 !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  border-radius: 12px !important;
+  padding: 0.6rem 1rem !important;
+  margin: 0.5rem 0.75rem !important;
+}
+
+#nav-sidebar a.section:link, #nav-sidebar a.section:visited {
+  color: var(--admin-text) !important;
+}
+
+/* Main Cards / Tables / Modules */
+.module, #changelist-filter, .inline-group {
+  background: var(--admin-surface) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--neu-raised) !important;
   border: 1px solid var(--admin-border) !important;
-  margin-bottom: 1.75rem !important;
+  margin: 1.5rem !important;
   overflow: hidden !important;
 }
 
-.module caption, .module h2 {
+.module h2, .module caption {
   background: transparent !important;
   color: var(--admin-text) !important;
   font-weight: 800 !important;
-  padding: 1rem 1.25rem !important;
+  padding: 1.1rem 1.4rem !important;
   border-bottom: 1px solid var(--admin-border) !important;
 }
 
-/* Tables & Lists */
+/* Table Design */
 table {
   background: transparent !important;
   border-collapse: separate !important;
@@ -84,14 +110,18 @@ table {
 }
 
 thead th {
-  background: var(--admin-surface-card) !important;
+  background: var(--admin-surface-elevated) !important;
   color: var(--admin-text-muted) !important;
   font-weight: 700 !important;
   font-size: 0.75rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
   border-bottom: 1px solid var(--admin-border) !important;
-  padding: 0.85rem 1rem !important;
+  padding: 0.9rem 1.1rem !important;
+}
+
+thead th a {
+  color: var(--admin-text) !important;
 }
 
 tbody tr {
@@ -100,17 +130,17 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background: rgba(56, 189, 248, 0.04) !important;
+  background: rgba(56, 189, 248, 0.05) !important;
 }
 
 tbody td, tbody th {
-  padding: 0.9rem 1rem !important;
+  padding: 0.9rem 1.1rem !important;
   border-bottom: 1px solid var(--admin-border) !important;
   color: var(--admin-text) !important;
   font-size: 0.85rem !important;
 }
 
-/* Form Fields & Inset Wells */
+/* Inset Input Wells */
 input[type="text"], input[type="password"], input[type="email"], 
 input[type="url"], input[type="number"], input[type="date"], 
 input[type="time"], textarea, select {
@@ -118,55 +148,47 @@ input[type="time"], textarea, select {
   color: var(--admin-text) !important;
   border: 1px solid var(--admin-border) !important;
   border-radius: 12px !important;
-  box-shadow: var(--neu-shadow-inset) !important;
+  box-shadow: var(--neu-inset) !important;
   padding: 0.65rem 1rem !important;
   outline: none !important;
-  font-size: 0.85rem !important;
+  font-size: 0.875rem !important;
 }
 
 input:focus, textarea:focus, select:focus {
   border-color: var(--admin-accent) !important;
 }
 
-/* Buttons */
-.button, input[type="submit"], input[type="button"], .submit-row input {
+/* Action Buttons */
+.button, input[type="submit"], input[type="button"], .submit-row input, .object-tools a {
   background: var(--admin-accent) !important;
   color: #ffffff !important;
   border: none !important;
   border-radius: 9999px !important;
-  box-shadow: var(--neu-shadow-sm) !important;
+  box-shadow: var(--neu-raised-sm) !important;
   font-weight: 700 !important;
   font-size: 0.8rem !important;
-  padding: 0.6rem 1.4rem !important;
+  padding: 0.6rem 1.5rem !important;
   cursor: pointer !important;
+  text-decoration: none !important;
   transition: all 0.15s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
 }
 
-.button:hover, input[type="submit"]:hover {
+.button:hover, input[type="submit"]:hover, .object-tools a:hover {
   background: var(--admin-accent-hover) !important;
   transform: translateY(-1px) !important;
 }
 
 .button:active, input[type="submit"]:active {
-  box-shadow: var(--neu-shadow-inset) !important;
+  box-shadow: var(--neu-inset) !important;
   transform: translateY(1px) !important;
 }
 
-.button.default, input[type="submit"].default {
-  background: var(--admin-accent) !important;
-}
-
-.deletelink {
-  background: #ef4444 !important;
-  color: #fff !important;
-  border-radius: 9999px !important;
-  padding: 0.5rem 1.25rem !important;
-  box-shadow: var(--neu-shadow-sm) !important;
-}
-
-/* Filter Sidebar */
+/* Right Filter Sidebar */
 #changelist-filter {
   padding: 1.25rem !important;
+  border-radius: 16px !important;
 }
 
 #changelist-filter h2 {
@@ -182,8 +204,4 @@ input:focus, textarea:focus, select:focus {
 
 #changelist-filter a {
   color: var(--admin-text-muted) !important;
-}
-
-#changelist-filter a:hover {
-  color: var(--admin-text) !important;
 }

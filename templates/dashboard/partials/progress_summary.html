@@ -1,18 +1,18 @@
-<div id="progress-summary-card" class="card flex flex-col justify-between" hx-swap-oob="true">
+<div id="progress-summary-card" class="card flex flex-col justify-between" style="min-height: 160px;" hx-swap-oob="true">
     <div>
-        <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center justify-between mb-3">
             <span class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--text-muted);">Today's Progress</span>
             <span class="text-base font-extrabold" style="color: var(--accent);">{{ completion_pct }}%</span>
         </div>
         
-        <!-- Sunken Track with Raised Accent Bar -->
-        <div class="neu-sunken p-1 rounded-full mb-3">
+        <!-- Recessed Sunken Progress Track -->
+        <div class="neu-sunken p-1 rounded-full mb-3" style="background: var(--surface);">
             <div class="h-3 rounded-full transition-all duration-300" 
                  style="background: var(--accent); width: {{ completion_pct }}%;"></div>
         </div>
     </div>
 
-    <div class="flex justify-between text-xs font-semibold" style="color: var(--text-muted);">
+    <div class="flex justify-between text-xs font-bold" style="color: var(--text-muted);">
         <span>Done: {{ completed_minutes }}m</span>
         <span>Planned: {{ planned_minutes }}m</span>
     </div>

@@ -1,0 +1,22 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}FocusFlow Management Console{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'admin/css/neumorphic_admin.css' %}">
+{% endblock %}
+
+{% block branding %}
+<div style="display: flex; align-items: center; gap: 10px;">
+    <div style="width: 28px; height: 28px; border-radius: 8px; background: #38bdf8; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #fff; font-size: 14px;">
+        F
+    </div>
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">FocusFlow Console</a>
+    </h1>
+</div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

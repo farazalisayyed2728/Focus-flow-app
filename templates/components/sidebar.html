@@ -1,58 +1,55 @@
 {% if request.user.is_authenticated or show_shell_nav %}
-<aside class="desktop-sidebar sidebar-container">
-  <div>
-    <!-- App Brand -->
-    <div class="flex items-center gap-3 p-3 rounded-2xl mb-8" style="box-shadow: var(--shadow-raised-sm);">
-      <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white shadow-md text-base" style="background: var(--accent);">
-        F
-      </div>
-      <span class="text-lg font-extrabold tracking-tight">FocusFlow</span>
+<asid<aside class="desktop-sidebar sidebar-container">
+  <div class="sidebar-top">
+    <!-- Brand -->
+    <div class="brand-card">
+      <div class="brand-icon">F</div>
+      <span class="brand-name">FocusFlow</span>
     </div>
 
-    <!-- Navigation Links -->
-    <nav class="flex flex-col gap-3">
-      <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all hover:text-brand" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
-        <span>📊</span> Dashboard
+    <!-- Navigation Menu -->
+    <nav class="sidebar-nav">
+      <a href="{% url 'dashboard' %}" class="sidebar-link">
+        <span class="link-icon">📊</span> Dashboard
       </a>
-      <a href="{% url 'routine-builder' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all hover:text-brand" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
-        <span>⏱️</span> Routines
+      <a href="{% url 'routine-builder' %}" class="sidebar-link">
+        <span class="link-icon">⏱️</span> Routines
       </a>
-      <a href="{% url 'habit-list' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all hover:text-brand" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
-        <span>🌱</span> Habits
+      <a href="{% url 'habit-list' %}" class="sidebar-link">
+        <span class="link-icon">🌱</span> Habits
       </a>
-      <a href="{% url 'weekly-analytics' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all hover:text-brand" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
-        <span>📈</span> Analytics
+      <a href="{% url 'weekly-analytics' %}" class="sidebar-link">
+        <span class="link-icon">📈</span> Analytics
       </a>
-      <a href="{% url 'settings' %}" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all hover:text-brand" style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
-        <span>⚙️</span> Settings
+      <a href="{% url 'settings' %}" class="sidebar-link">
+        <span class="link-icon">⚙️</span> Settings
       </a>
     </nav>
   </div>
 
-  <div class="flex flex-col gap-3 pt-6 border-t" style="border-color: var(--border-subtle);">
-    <!-- In-App Notification Dropdown -->
-    <div class="relative" x-data="notificationTray">
-      <button @click="toggleTray()"
+  <!-- Pinned Bottom Controls (Never scrolls out of view) -->
+  <div class="sidebar-bottom">
+    <div class="relative" x-data="{ openTray: false }">
+      <button type="button"
+              @click="openTray = !openTray" 
               hx-get="{% url 'notification-tray' %}" 
-              hx-target="#tray-dropdown"
-              class="flex items-center justify-between w-full px-4 py-3 rounded-2xl text-xs font-semibold cursor-pointer"
-              style="box-shadow: var(--shadow-raised-sm); color: var(--text);">
-        <div class="flex items-center gap-2">
+              hx-target="#sidebar-tray-dropdown"
+              class="sidebar-control-btn">
+        <div class="control-label">
           <span>🔔 Alerts</span>
           <span id="notif-badge" hx-get="{% url 'notification-unread-count' %}" hx-swap="outerHTML"></span>
         </div>
       </button>
 
-      <div id="tray-dropdown" 
+      <div id="sidebar-tray-dropdown" 
            x-show="openTray" 
-           @click.away="closeTray()"
+           @click.away="openTray = false" 
            x-cloak 
-           class="absolute left-0 bottom-14 w-64 card p-0 overflow-hidden z-50">
+           class="tray-popup-sidebar">
       </div>
     </div>
 
-    <!-- Theme Mode Toggle -->
-    <button @click="$dispatch('toggle-theme')" class="btn btn-secondary w-full text-xs">
+    <button type="button" @click="toggleTheme()" class="btn btn-secondary w-full text-xs">
       Toggle Light / Dark
     </button>
   </div>

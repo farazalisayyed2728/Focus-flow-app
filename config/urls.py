@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import include, path
 
-from apps.core.views import HealthCheckView, assetlinks_json, offline_view, pwa_manifest, shell_preview,service_worker
+from apps.core.views import HealthCheckView, offline_view, pwa_manifest, shell_preview,service_worker
 from apps.dashboard.views import dashboard_view
 from apps.core.views import HealthCheckView, ReadinessCheckView, shell_preview
 

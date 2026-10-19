@@ -17,7 +17,6 @@ router.register(r'habits', HabitViewSet, basename='api-habits')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('.well-known/assetlinks.json', assetlinks_json, name='assetlinks-json'),
     path('health/', HealthCheckView.as_view(), name='health-check'),
     path('ready/', ReadinessCheckView.as_view(), name='readiness-check'),
     path('sw.js', service_worker, name='service-worker'),

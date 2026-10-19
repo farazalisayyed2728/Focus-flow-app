@@ -112,22 +112,4 @@ def pwa_manifest(request):
 def offline_view(request):
     return render(request, 'offline.html')
 
-
-
-def assetlinks_json(request):
-    """
-    Serves Digital Asset Links verification required by Google Play Store Trusted Web Activities.
-    """
-    statement = [{
-        "relation": ["delegate_permission/common.handle_all_urls"],
-        "target": {
-            "namespace": "android_app",
-            "package_name": "app.focusflow.twa",
-            "sha256_cert_fingerprints": [
-                # Replace with production Play Console / Keystore SHA-256 fingerprint upon signing
-                "13:AB:91:CA:97:72:E6:BB:EA:09:C5:E4:BB:E8:26:25:95:AE:99:22:B1:07:DC:1C:99:49:20:81:1D:3E:B0:B7"
-            
-            ]
-        }
-    }]
     return JsonResponse(statement, safe=False)

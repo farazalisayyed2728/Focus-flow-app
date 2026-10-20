@@ -36,17 +36,17 @@
     </div>
 
     <!-- Fixed Overlay Modal (Hidden until openModal is true) -->
-    <div x-show="openModal" 
-         x-cloak
-         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-         style="background: rgba(0, 0, 0, 0.6);">
-        <div class="card w-full max-w-lg shadow-2xl relative" @click.away="openModal = false">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b" style="border-color: var(--border-subtle);">
-                <h2 class="text-base font-bold">Routine Time Block</h2>
-                <button type="button" @click="openModal = false" class="text-xl text-stone-400 hover:text-stone-700 font-bold">&times;</button>
-            </div>
-            <div id="modal-body"></div>
+    <!-- Fixed Overlay Modal for Routine Block -->
+<div x-show="openModal" 
+     x-cloak
+     class="modal-overlay">
+    <div class="modal-dialog-card" @click.away="openModal = false">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color);">
+            <h2 style="font-size: 1.1rem; font-weight: 800;">Routine Time Block</h2>
+            <button type="button" @click="openModal = false" style="background: none; border: none; font-size: 1.25rem; color: var(--text-muted); cursor: pointer;">&times;</button>
         </div>
+        <div id="modal-body"></div>
     </div>
+</div>
 </div>
 {% endblock %}

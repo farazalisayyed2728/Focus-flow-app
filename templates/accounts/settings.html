@@ -3,146 +3,78 @@
 {% block title %}Settings & Preferences — FocusFlow{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto space-y-6" x-data="settingsTabs">
+<div class="clean-card max-w-3xl mx-auto space-y-6">
     <div>
-        <h1 class="text-2xl font-bold tracking-tight">Settings & Preferences</h1>
-        <p style="color: var(--text-muted);" class="text-xs">Configure your display, routine defaults, notifications, and personal data.</p>
+        <h1 style="font-size: 1.5rem; font-weight: 900; letter-spacing: -0.02em;">Appearance & Settings</h1>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
+            The accent re-tints the whole workspace and is remembered on this device (00:25).
+        </p>
     </div>
 
-    <!-- Navigation Tabs -->
-    <div class="flex gap-2 border-b pb-2" style="border-color: var(--border);">
-        <button @click="setTab('profile')" :class="tab === 'profile' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">
-            Profile & Display
-        </button>
-        <button @click="setTab('notifications')" :class="tab === 'notifications' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">
-            Notifications
-        </button>
-        <button @click="setTab('data')" :class="tab === 'data' ? 'btn-primary' : 'btn-secondary'" class="btn text-xs py-1 px-3">
-            Data & Privacy
-        </button>
+    <!-- Theme Accent Palette Picker (Video 00:25) -->
+    <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+        <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">
+            Workspace Accent Color
+        </span>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 0.75rem; flex-wrap: wrap;">
+            <!-- Forest -->
+            <button type="button" 
+                    @click="$dispatch('set-accent', { accent: 'forest' })"
+                    class="action-secondary-btn"
+                    style="gap: 0.6rem;">
+                <span style="width: 14px; height: 14px; border-radius: 50%; background: #1b5e3f;"></span>
+                <span>Forest</span>
+            </button>
+
+            <!-- Ocean -->
+            <button type="button" 
+                    @click="$dispatch('set-accent', { accent: 'ocean' })"
+                    class="action-secondary-btn"
+                    style="gap: 0.6rem;">
+                <span style="width: 14px; height: 14px; border-radius: 50%; background: #2563eb;"></span>
+                <span>Ocean</span>
+            </button>
+
+            <!-- Plum -->
+            <button type="button" 
+                    @click="$dispatch('set-accent', { accent: 'plum' })"
+                    class="action-secondary-btn"
+                    style="gap: 0.6rem;">
+                <span style="width: 14px; height: 14px; border-radius: 50%; background: #7c3aed;"></span>
+                <span>Plum</span>
+            </button>
+
+            <!-- Ember -->
+            <button type="button" 
+                    @click="$dispatch('set-accent', { accent: 'ember' })"
+                    class="action-secondary-btn"
+                    style="gap: 0.6rem;">
+                <span style="width: 14px; height: 14px; border-radius: 50%; background: #ea580c;"></span>
+                <span>Ember</span>
+            </button>
+        </div>
     </div>
 
-    <!-- Tab 1: Profile & Theme Settings -->
-    <div x-show="tab === 'profile'" class="card space-y-4">
-        <h2 class="text-base font-bold">Display & Time Defaults</h2>
-        <form method="post" class="space-y-4">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="update_profile">
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-semibold mb-1">Display Name</label>
-                    {{ profile_form.display_name }}
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold mb-1">Timezone</label>
-                    {{ profile_form.timezone }}
-                </div>
-            </div>
+    <!-- Profile & Clock Settings Form -->
+    <form method="post" style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="update_profile">
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <label class="block text-xs font-semibold mb-1">Theme</label>
-                    {{ profile_form.theme }}
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold mb-1">Clock Format</label>
-                    {{ profile_form.clock_format }}
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold mb-1">Week Starts On</label>
-                    {{ profile_form.week_start }}
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-semibold mb-1">Typical Wake Time</label>
-                    {{ profile_form.typical_wake_time }}
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold mb-1">Typical Sleep Time</label>
-                    {{ profile_form.typical_sleep_time }}
-                </div>
-            </div>
-
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div>
-                <label class="block text-xs font-semibold mb-1">Main Focus / Goal</label>
-                {{ profile_form.main_goal }}
+                <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Display Name</label>
+                {{ profile_form.display_name }}
             </div>
-
-            <div class="pt-2">
-                <button type="submit" class="btn btn-primary text-xs">Save Preferences</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Tab 2: Notifications Preferences -->
-    <div x-show="tab === 'notifications'" x-cloak class="card space-y-4">
-        <h2 class="text-base font-bold">Alert Preferences</h2>
-        <form method="post" class="space-y-4">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="update_notifications">
-
-            <div class="space-y-3">
-                <label class="flex items-center gap-3 text-xs">
-                    {{ notif_form.in_app_enabled }}
-                    <span>Enable In-App Notifications</span>
-                </label>
-                <label class="flex items-center gap-3 text-xs">
-                    {{ notif_form.routine_reminders_enabled }}
-                    <span>Routine Time-Block Reminders</span>
-                </label>
-                <label class="flex items-center gap-3 text-xs">
-                    {{ notif_form.habit_reminders_enabled }}
-                    <span>Habit Reminders</span>
-                </label>
-                <label class="flex items-center gap-3 text-xs">
-                    {{ notif_form.daily_start_reminder_enabled }}
-                    <span>Daily Morning Plan Reminder</span>
-                </label>
-            </div>
-
-            <div class="pt-2">
-                <button type="submit" class="btn btn-primary text-xs">Save Notification Settings</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Tab 3: Data Export & Account Deletion -->
-    <div x-show="tab === 'data'" x-cloak class="space-y-4">
-        <div class="card space-y-3">
-            <h2 class="text-base font-bold">Export Your Personal Data</h2>
-            <p style="color: var(--text-muted);" class="text-xs">
-                Download a complete, machine-readable JSON file containing all your routines, habits, and execution histories.
-            </p>
             <div>
-                <a href="{% url 'settings-export' %}" class="btn btn-secondary text-xs">
-                    ⬇ Export JSON Archive
-                </a>
+                <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Timezone</label>
+                {{ profile_form.timezone }}
             </div>
         </div>
 
-        <div class="card space-y-3 border-red-300">
-            <h2 class="text-base font-bold text-red-600">Danger Zone: Delete Account</h2>
-            <p style="color: var(--text-muted);" class="text-xs">
-                Deleting your account will permanently remove all your routines, habits, occurrences, and logs. This action is irreversible.
-            </p>
-
-            <form method="post" class="space-y-3 max-w-sm">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="delete_account">
-                <div>
-                    {{ delete_form.confirmation }}
-                    {% if delete_form.confirmation.errors %}
-                        <p class="text-xs text-red-600 mt-1">{{ delete_form.confirmation.errors.0 }}</p>
-                    {% endif %}
-                </div>
-                <button type="submit" class="btn btn-secondary text-xs text-red-600 hover:bg-red-50 hover:border-red-500">
-                    Permanently Delete Account
-                </button>
-            </form>
-        </div>
-    </div>
+        <button type="submit" class="action-pill-btn" style="align-self: flex-start; margin-top: 0.5rem;">
+            Save Settings
+        </button>
+    </form>
 </div>
 {% endblock %}

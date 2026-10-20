@@ -1,80 +1,190 @@
-
 {% extends "base.html" %}
 
 {% block title %}Dashboard — FocusFlow{% endblock %}
 
 {% block content %}
-<div class="space-y-8 max-w-5xl mx-auto">
-    <!-- Top Greeting Banner -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="space-y-6">
+    <!-- Section Header & Quick Actions -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
         <div>
-            <span class="text-xs font-bold tracking-wider uppercase" style="color: var(--accent);">Focus Command Center</span>
-            <h1 class="text-3xl font-extrabold tracking-tight mt-1">
-                Good day, {{ user.profile.display_name|default:user.username }}
-            </h1>
-            <p style="color: var(--text-muted);" class="text-xs mt-0.5">Build your day. One block at a time.</p>
+            <h1 style="font-size: 1.75rem; font-weight: 900; letter-spacing: -0.02em;">Dashboard</h1>
+            <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 0.2rem;">Welcome back! Here is your daily productivity rhythm.</p>
         </div>
-        <div class="pill pill-inset text-xs font-bold self-start md:self-auto py-2 px-4">
-            📅 {{ timeline_data.target_date|date:"l, d F Y" }}
+
+        <div style="display: flex; gap: 0.75rem;">
+            <a href="{% url 'routine-builder' %}" class="action-pill-btn">
+                <span>+</span> Add Routine Block
+            </a>
+            <a href="{% url 'settings-export' %}" class="action-secondary-btn">
+                <span>↓</span> Export Data
+            </a>
         </div>
     </div>
 
-    <!-- KPI Metric Blocks (UI 5 / UI 6 Inspired) -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Progress Summary -->
-        {% include "dashboard/partials/progress_summary.html" with completion_pct=timeline_data.completion_pct planned_minutes=timeline_data.planned_minutes completed_minutes=timeline_data.completed_minutes %}
-
-        <!-- Active Block Card -->
-        <div class="card flex flex-col justify-between">
-            <div>
-                <span class="text-[11px] font-bold uppercase tracking-wider block" style="color: var(--text-muted);">Current Active</span>
-                {% if timeline_data.active_block %}
-                    <h3 class="text-lg font-bold mt-2">{{ timeline_data.active_block.title }}</h3>
-                    <p class="text-xs font-semibold mt-1" style="color: var(--accent);">
-                        {{ timeline_data.active_block.start_time|time:"H:i" }} - {{ timeline_data.active_block.end_time|time:"H:i" }}
-                    </p>
-                {% else %}
-                    <p class="text-xs text-stone-400 mt-4">No block scheduled right now.</p>
-                {% endif %}
+    <!-- 1. Top 4 Metric Cards Row (00:01 in video) -->
+    <div class="metrics-row">
+        <div class="metric-card">
+            <div class="metric-label-row">
+                <span class="metric-title">Total Planned</span>
+                <span>⏱️</span>
             </div>
-            <span class="pill pill-inset text-[10px] self-start mt-4">Live Execution</span>
+            <div class="metric-val-row">
+                <span class="metric-number">{{ timeline_data.planned_minutes }}m</span>
+                <span class="metric-delta-tag">Scheduled</span>
+            </div>
         </div>
 
-        <!-- Next Block Card -->
-        <div class="card flex flex-col justify-between">
+        <div class="metric-card">
+            <div class="metric-label-row">
+                <span class="metric-title">Completed Time</span>
+                <span>✓</span>
+            </div>
+            <div class="metric-val-row">
+                <span class="metric-number">{{ timeline_data.completed_minutes }}m</span>
+                <span class="metric-delta-tag">{{ timeline_data.completion_pct }}%</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-label-row">
+                <span class="metric-title">Active Routine</span>
+                <span>🔥</span>
+            </div>
+            <div class="metric-val-row">
+                <span class="metric-number">{% if timeline_data.active_block %}1{% else %}0{% endif %}</span>
+                <span class="metric-delta-tag">In Flow</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-label-row">
+                <span class="metric-title">Pending Items</span>
+                <span>⏳</span>
+            </div>
+            <div class="metric-val-row">
+                <span class="metric-number">{{ timeline_data.timeline|length }}</span>
+                <span class="metric-delta-tag">Today</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Mid Section: Analytics Capsules + Reminders + Topographic Time Tracker -->
+    <div style="display: grid; grid-template-columns: 2fr 1.3fr 1.7fr; gap: 1.25rem;">
+        
+        <!-- Activity Capsule Bars (00:03 in video) -->
+        <div class="clean-card" style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-                <span class="text-[11px] font-bold uppercase tracking-wider block" style="color: var(--text-muted);">Up Next</span>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.875rem; font-weight: 800;">Routine Activity</span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">7-Day Flow</span>
+                </div>
+            </div>
+
+            <!-- Capsule Bars -->
+            <div class="capsule-bars-container">
+                <div class="capsule-bar-col">
+                    <div class="capsule-pill filled" style="height: 65%;"></div>
+                    <span class="capsule-day-label">Mon</span>
+                </div>
+                <div class="capsule-bar-col">
+                    <div class="capsule-pill filled" style="height: 85%;"></div>
+                    <span class="capsule-day-label">Tue</span>
+                </div>
+                <div class="capsule-bar-col">
+                    <div class="capsule-pill hatched" style="height: 100%;"></div>
+                    <span class="capsule-day-label">Wed</span>
+                </div>
+                <div class="capsule-bar-col">
+                    <div class="capsule-pill filled" style="height: 70%;"></div>
+                    <span class="capsule-day-label">Thu</span>
+                </div>
+                <div class="capsule-bar-col">
+                    <div class="capsule-pill filled" style="height: 90%;"></div>
+                    <span class="capsule-day-label">Fri</span>
+                </div>
+                <div class="capsule-bar-col">
+                    <div class="capsule-pill" style="height: 35%;"></div>
+                    <span class="capsule-day-label">Sat</span>
+                </div>
+                <div class="capsule-bar-col">
+                    <div class="capsule-pill" style="height: 45%;"></div>
+                    <span class="capsule-day-label">Sun</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reminders / Next Up Card -->
+        <div class="clean-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Upcoming Routine</span>
                 {% if timeline_data.next_block %}
-                    <h3 class="text-lg font-bold mt-2">{{ timeline_data.next_block.title }}</h3>
-                    <p class="text-xs mt-1" style="color: var(--text-muted);">
+                    <h3 style="font-size: 1.15rem; font-weight: 800; margin-top: 0.5rem;">{{ timeline_data.next_block.title }}</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
                         Starts at {{ timeline_data.next_block.start_time|time:"H:i" }} ({{ timeline_data.next_block.duration_minutes }}m)
                     </p>
                 {% else %}
-                    <p class="text-xs text-stone-400 mt-4">All caught up for today!</p>
+                    <h3 style="font-size: 1.15rem; font-weight: 800; margin-top: 0.5rem;">All Caught Up!</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">No remaining blocks scheduled for today.</p>
                 {% endif %}
             </div>
-            <span class="pill pill-inset text-[10px] self-start mt-4">Upcoming</span>
+
+            <a href="{% url 'routine-builder' %}" class="action-secondary-btn" style="align-self: flex-start; margin-top: 1rem;">
+                View Schedule
+            </a>
+        </div>
+
+        <!-- Topographic Time Tracker (00:05 in video) -->
+        <div class="time-tracker-card" x-data="pomodoro">
+            <div class="tracker-title">Time Tracker</div>
+            <div class="tracker-digits" x-text="formatTime()">25:00</div>
+
+            <div class="tracker-controls">
+                <button type="button" @click="toggle()" class="tracker-btn-circle pause" aria-label="Play / Pause">
+                    <span x-text="isRunning ? '⏸' : '▶'">▶</span>
+                </button>
+                <button type="button" @click="reset()" class="tracker-btn-circle stop" aria-label="Reset Timer">
+                    ⏹
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Neumorphic Pomodoro Section -->
-    {% include "components/pomodoro.html" %}
-
-    <!-- Today's Schedule Timeline & Category Filters -->
-    <div class="space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h2 class="text-lg font-bold tracking-tight">Today's Schedule</h2>
-
-            <!-- Neumorphic Filter Controls -->
-            <div class="flex flex-wrap gap-2 text-xs">
-                <a hx-get="{% url 'dashboard' %}?category=all&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="btn text-xs py-1 px-4">All</a>
-                <a hx-get="{% url 'dashboard' %}?category=Study&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="btn text-xs py-1 px-4">Study</a>
-                <a hx-get="{% url 'dashboard' %}?category=Work&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="btn text-xs py-1 px-4">Work</a>
-                <a hx-get="{% url 'dashboard' %}?category=Fitness&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="btn text-xs py-1 px-4">Fitness</a>
+    <!-- 3. Bottom Row: Routine Checklist + Donut Progress -->
+    <div style="display: grid; grid-template-columns: 2.2fr 1fr; gap: 1.25rem; margin-top: 1.25rem;">
+        
+        <!-- Checklist Table -->
+        <div class="clean-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 style="font-size: 1rem; font-weight: 800;">Today's Schedule Execution</h2>
+                <div style="display: flex; gap: 0.4rem;">
+                    <a hx-get="{% url 'dashboard' %}?category=all&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="action-secondary-btn" style="padding: 0.25rem 0.75rem; font-size: 0.72rem;">All</a>
+                    <a hx-get="{% url 'dashboard' %}?category=Study&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="action-secondary-btn" style="padding: 0.25rem 0.75rem; font-size: 0.72rem;">Study</a>
+                    <a hx-get="{% url 'dashboard' %}?category=Work&filter_update=1" hx-target="#timeline-items" hx-swap="outerHTML" class="action-secondary-btn" style="padding: 0.25rem 0.75rem; font-size: 0.72rem;">Work</a>
+                </div>
             </div>
+
+            {% include "dashboard/partials/timeline_list.html" with timeline_data=timeline_data %}
         </div>
 
-        {% include "dashboard/partials/timeline_list.html" with timeline_data=timeline_data %}
+        <!-- Donut Progress Meter (00:04 in video) -->
+        <div class="clean-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+            <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin-bottom: 1rem;">Daily Completion</span>
+            
+            <div class="donut-meter-box">
+                <svg class="donut-svg" viewBox="0 0 36 36">
+                    <path class="donut-circle-bg"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="donut-circle-val"
+                          stroke-dasharray="{{ timeline_data.completion_pct }}, 100"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <div class="donut-percent-text">{{ timeline_data.completion_pct }}%</div>
+            </div>
+
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem;">
+                {{ timeline_data.completed_minutes }}m of {{ timeline_data.planned_minutes }}m completed
+            </p>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -1,6 +1,11 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" data-theme="light" x-data="theme" @toggle-theme.window="toggleTheme()">
+<html lang="en" 
+      data-theme="light" 
+      data-accent="forest"
+      x-data="theme" 
+      @toggle-theme.window="toggleTheme()"
+      @set-accent.window="setAccent($event.detail.accent)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -25,57 +30,59 @@
     <script type="module" src="{% static 'js/app.js' %}"></script>
 </head>
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-
-    <!-- Mobile Top Header (Restricted to logged-in users only) -->
-    {% if request.user.is_authenticated %}
-    <header class="md:hidden flex items-center justify-between px-4 py-3 border-b" 
-            style="background-color: var(--surface); border-color: var(--border-subtle);">
-        <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-white text-xs" 
-                 style="background: var(--accent);">F</div>
-            <span class="font-extrabold text-sm tracking-tight">FocusFlow</span>
-        </div>
-        
-        <div class="flex items-center gap-3">
-            <!-- Compact Mobile Alert Icon -->
-            <div class="relative" x-data="{ openTray: false }">
-                <button @click="openTray = !openTray" 
-                        hx-get="{% url 'notification-tray' %}" 
-                        hx-target="#mobile-tray-dropdown"
-                        class="neu-circle-btn w-9 h-9 text-xs"
-                        aria-label="Alerts">
-                    🔔
-                    <span id="notif-badge" hx-get="{% url 'notification-unread-count' %}" hx-swap="outerHTML"></span>
-                </button>
-                <div id="mobile-tray-dropdown" 
-                     x-show="openTray" 
-                     @click.away="openTray = false" 
-                     x-cloak 
-                     class="absolute right-0 top-11 w-72 card p-0 overflow-hidden z-50 shadow-2xl">
-                </div>
-            </div>
-
-            <!-- Mobile Theme Toggle -->
-            <button @click="toggleTheme()" class="neu-circle-btn w-9 h-9 text-xs" aria-label="Toggle Theme">
-                🌓
-            </button>
-        </div>
-    </header>
-    {% endif %}
-
-    <!-- Main Layout Shell -->
-    <div class="app-layout">
+    <div class="app-shell">
         {% if request.user.is_authenticated %}
+            <!-- Fixed Desktop Sidebar -->
             {% include "components/sidebar.html" %}
         {% endif %}
 
-        <main class="content-area">
-            {% block content %}{% endblock %}
-        </main>
+        <div class="workspace-wrapper">
+            {% if request.user.is_authenticated %}
+                <!-- Top Global Header -->
+                <header class="top-header">
+                    <div class="search-box">
+                        <span>🔍</span>
+                        <input type="text" class="search-input" placeholder="Search tasks, routines..." aria-label="Search">
+                        <span class="kbd-shortcut">⌘K</span>
+                    </div>
 
-        {% if request.user.is_authenticated %}
-            {% include "components/mobile_nav.html" %}
-        {% endif %}
+                    <div class="header-user-profile">
+                        <!-- Notification Tray -->
+                        <div class="relative" x-data="{ openTray: false }">
+                            <button type="button"
+                                    @click="openTray = !openTray" 
+                                    hx-get="{% url 'notification-tray' %}" 
+                                    hx-target="#top-tray-dropdown"
+                                    class="tracker-btn-circle pause"
+                                    style="width: 36px; height: 36px; background: var(--bg-sunken); color: var(--text-main);"
+                                    aria-label="Alerts">
+                                🔔
+                                <span id="notif-badge" hx-get="{% url 'notification-unread-count' %}" hx-swap="outerHTML"></span>
+                            </button>
+                            <div id="top-tray-dropdown" 
+                                 x-show="openTray" 
+                                 @click.away="openTray = false" 
+                                 x-cloak 
+                                 style="position: absolute; right: 0; top: 44px; width: 300px; z-index: 50;"
+                                 class="clean-card p-0 overflow-hidden">
+                            </div>
+                        </div>
+
+                        <!-- User Profile Pill -->
+                        <a href="{% url 'settings' %}" class="user-avatar-pill" style="text-decoration: none;">
+                            <div class="user-avatar-circle">
+                                {{ user.username|slice:":1"|upper }}
+                            </div>
+                            <span class="user-name-text">{{ user.profile.display_name|default:user.username }}</span>
+                        </a>
+                    </div>
+                </header>
+            {% endif %}
+
+            <main class="page-container">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
     </div>
 
     {% include "components/toast.html" %}

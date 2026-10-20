@@ -34,17 +34,6 @@
 </aside>
 
 <div class="relative" x-data="notificationTray">
-  <button @click="toggleTray()"
-          hx-get="{% url 'notification-tray' %}" 
-          hx-target="#tray-dropdown"
-          class="flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm font-medium hover:bg-stone-100" 
-          style="color: var(--text);">
-    <div class="flex items-center gap-2">
-    
-      <span id="notif-badge" hx-get="{% url 'notification-unread-count' %}" hx-trigger="load" hx-swap="outerHTML"></span>
-    </div>
-  </button>
-
   <div id="tray-dropdown" 
        x-show="openTray" 
        @click.away="closeTray()"

@@ -3,7 +3,7 @@
 {% block title %}Routine Builder — FocusFlow{% endblock %}
 
 {% block content %}
-<div class="space-y-6 max-w-4xl mx-auto" x-data="{ openModal: false }" @open-routine-modal.window="openModal = true">
+<div class="space-y-6 max-w-4xl mx-auto" x-data="{ openModal: false }" @open-routine-modal.window="openModal = true" @close-routine-modal.window="openModal = false">
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-bold tracking-tight">{{ routine.name }}</h1>

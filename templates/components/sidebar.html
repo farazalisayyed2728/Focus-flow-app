@@ -25,10 +25,10 @@
         </nav>
     </div>
 
-    <!-- Promo Banner Box (00:01 in video) -->
+    <!-- Bottom Promo Banner Card -->
     <div class="sidebar-cta-card">
         <div class="sidebar-cta-title">FocusFlow Mobile Ready</div>
-        <div class="sidebar-cta-sub">Install on iOS & Android via Chrome PWA</div>
+        <div class="sidebar-cta-sub">Install via Chrome PWA on mobile</div>
         <a href="{% url 'settings' %}" class="sidebar-cta-btn">Install App</a>
     </div>
 </aside>
@@ -40,7 +40,7 @@
           class="flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm font-medium hover:bg-stone-100" 
           style="color: var(--text);">
     <div class="flex items-center gap-2">
-      <span>🔔 Alerts</span>
+    
       <span id="notif-badge" hx-get="{% url 'notification-unread-count' %}" hx-trigger="load" hx-swap="outerHTML"></span>
     </div>
   </button>

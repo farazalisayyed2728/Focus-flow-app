@@ -1,31 +1,21 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" 
-      data-theme="light" 
+      data-theme="dark" 
       data-accent="forest"
       x-data="theme" 
       @toggle-theme.window="toggleTheme()"
       @set-accent.window="setAccent($event.detail.accent)">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#3182ce">
-    <title>{% block title %}FocusFlow{% endblock %}</title>
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="{% url 'pwa-manifest' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FocusFlow — Daily Command Center{% endblock %}</title>
 
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
     <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-    <!-- Prevent Alpine.js content flash -->
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
+    <style>[x-cloak] { display: none !important; }</style>
 
-    <!-- HTMX & Alpine.js -->
     <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
     <script type="module" src="{% static 'js/app.js' %}"></script>
 </head>
@@ -38,7 +28,7 @@
 
         <div class="workspace-wrapper">
             {% if request.user.is_authenticated %}
-                <!-- Top Global Header -->
+                <!-- Top Header Bar -->
                 <header class="top-header">
                     <div class="search-box">
                         <span>🔍</span>
@@ -47,29 +37,37 @@
                     </div>
 
                     <div class="header-user-profile">
-                        <!-- Notification Tray -->
+                        <!-- Dark / Light Theme Toggle -->
+                        <button type="button" 
+                                @click="toggleTheme()" 
+                                class="theme-toggle-btn"
+                                aria-label="Toggle Theme"
+                                title="Toggle Light / Dark Mode">
+                            <span x-text="theme === 'dark' ? '☀️' : '🌙'">🌙</span>
+                        </button>
+
+                        <!-- Notification Bell Dropdown -->
                         <div class="relative" x-data="{ openTray: false }">
                             <button type="button"
                                     @click="openTray = !openTray" 
                                     hx-get="{% url 'notification-tray' %}" 
                                     hx-target="#top-tray-dropdown"
-                                    class="tracker-btn-circle pause"
-                                    style="width: 36px; height: 36px; background: var(--bg-sunken); color: var(--text-main);"
-                                    aria-label="Alerts">
-                                🔔
+                                    class="notif-btn"
+                                    aria-label="Alerts"
+                                    title="Notifications">
+                                <span>🔔</span>
                                 <span id="notif-badge" hx-get="{% url 'notification-unread-count' %}" hx-swap="outerHTML"></span>
                             </button>
                             <div id="top-tray-dropdown" 
                                  x-show="openTray" 
                                  @click.away="openTray = false" 
                                  x-cloak 
-                                 style="position: absolute; right: 0; top: 44px; width: 300px; z-index: 50;"
-                                 class="clean-card p-0 overflow-hidden">
+                                 class="clean-card tray-dropdown">
                             </div>
                         </div>
 
                         <!-- User Profile Pill -->
-                        <a href="{% url 'settings' %}" class="user-avatar-pill" style="text-decoration: none;">
+                        <a href="{% url 'settings' %}" class="user-avatar-pill">
                             <div class="user-avatar-circle">
                                 {{ user.username|slice:":1"|upper }}
                             </div>

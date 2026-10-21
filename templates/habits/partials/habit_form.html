@@ -1,42 +1,50 @@
 <form hx-post="{% url 'habit-create' %}"
       hx-target="#habit-grid"
       hx-swap="beforeend"
-      class="space-y-4">
+      @htmx:after-request="if($event.detail.successful) { $dispatch('close-habit-modal'); }"
+      style="display: flex; flex-direction: column; gap: 1.15rem;">
     {% csrf_token %}
+    
     <div>
-        <label class="block text-xs font-semibold mb-1">Habit Name</label>
+        <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Habit Name</label>
         {{ form.name }}
+        {% if form.name.errors %}<p style="font-size: 0.72rem; color: #ef4444; margin-top: 0.25rem;">{{ form.name.errors.0 }}</p>{% endif %}
     </div>
 
-    <div class="grid grid-cols-2 gap-3">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
         <div>
-            <label class="block text-xs font-semibold mb-1">Category</label>
+            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Category</label>
             {{ form.category }}
         </div>
         <div>
-            <label class="block text-xs font-semibold mb-1">Frequency</label>
+            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Frequency</label>
             {{ form.frequency_type }}
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-3">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
         <div>
-            <label class="block text-xs font-semibold mb-1">Target Value</label>
+            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Target Value</label>
             {{ form.target_value }}
         </div>
         <div>
-            <label class="block text-xs font-semibold mb-1">Unit</label>
+            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Unit</label>
             {{ form.unit }}
         </div>
     </div>
 
     <div>
-        <label class="block text-xs font-semibold mb-1">Description (Optional)</label>
+        <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Description (Optional)</label>
         {{ form.description }}
     </div>
 
-    <div class="flex justify-end gap-2 pt-2">
-        <button type="button" @click="closeModal()" class="btn btn-secondary text-xs">Cancel</button>
-        <button type="submit" class="btn btn-primary text-xs">Create Habit</button>
+    <!-- Action Buttons -->
+    <div style="display: flex; justify-content: flex-end; align-items: center; gap: 0.75rem; margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+        <button type="button" @click="$dispatch('close-habit-modal')" class="action-secondary-btn" style="cursor: pointer;">
+            Cancel
+        </button>
+        <button type="submit" class="action-pill-btn" style="cursor: pointer;">
+            Create Habit
+        </button>
     </div>
 </form>

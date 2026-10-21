@@ -1,40 +1,43 @@
 <div id="occ-row-{{ item.occurrence.id }}" 
-     class="card flex items-center justify-between gap-3 overflow-hidden transition-all {% if item.occurrence.status == 'completed' %}opacity-75{% endif %} {% if item.is_current %}border-2 border-brand{% endif %}">
+     class="clean-card"
+     style="display: flex; align-items: center; justify-content: space-between; gap: 0.85rem; padding: 0.85rem 1.15rem; margin-bottom: 0.65rem; transition: all 0.2s ease; {% if item.occurrence.status == 'completed' %}opacity: 0.65;{% endif %} {% if item.is_current %}border: 2px solid var(--accent-primary);{% endif %}">
     
-    <div class="flex items-center gap-3 min-w-0 flex-1">
-        <!-- Quick Check Button -->
+    <div style="display: flex; align-items: center; gap: 0.75rem; min-width: 0; flex: 1;">
+        <!-- Checkbox Button -->
         <button hx-post="{% url 'toggle-occurrence' item.occurrence.id %}"
                 hx-target="#occ-row-{{ item.occurrence.id }}"
                 hx-swap="outerHTML"
-                class="w-8 h-8 rounded-full flex items-center justify-center border transition-all shrink-0 cursor-pointer"
-                style="{% if item.occurrence.status == 'completed' %}background: var(--accent); border-color: var(--accent); color: white;{% else %}box-shadow: var(--shadow-inset-sm); border-color: var(--border-subtle);{% endif %}"
+                class="tracker-btn-circle"
+                style="width: 28px; height: 28px; font-size: 0.75rem; shrink-0; {% if item.occurrence.status == 'completed' %}background: var(--accent-primary); color: #fff;{% else %}background: var(--bg-sunken); border: 1px solid var(--border-color); color: var(--text-main);{% endif %}"
                 aria-label="Toggle Complete">
             {% if item.occurrence.status == 'completed' %}✓{% endif %}
         </button>
 
-        <!-- Block Info (Truncates smoothly on mobile) -->
-        <div class="min-w-0 flex-1">
-            <div class="flex items-center gap-1.5 flex-wrap">
-                <span class="text-xs sm:text-sm font-bold truncate {% if item.occurrence.status == 'completed' %}line-through text-stone-500{% endif %}">
+        <!-- Information -->
+        <div style="min-width: 0; flex: 1;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <span style="font-size: 0.875rem; font-weight: 800; {% if item.occurrence.status == 'completed' %}text-decoration: line-through; color: var(--text-muted);{% endif %}">
                     {{ item.block.title }}
                 </span>
-                <span class="pill text-[10px] py-0.5 px-2">{{ item.block.category }}</span>
+                <span class="metric-delta-tag" style="font-size: 0.65rem; padding: 0.1rem 0.45rem;">
+                    {{ item.block.category }}
+                </span>
                 {% if item.is_current %}
-                    <span class="pill pill-accent text-[10px] py-0.5 px-1.5">Active</span>
+                    <span style="font-size: 0.65rem; background: var(--accent-primary); color: #fff; padding: 0.1rem 0.45rem; border-radius: var(--radius-full); font-weight: 800;">
+                        Active Now
+                    </span>
                 {% endif %}
             </div>
-            <p class="text-[11px] truncate mt-0.5" style="color: var(--text-muted);">
+            <p style="font-size: 0.72rem; color: var(--text-subtle); margin-top: 0.15rem;">
                 {{ item.block.start_time|time:"H:i" }} - {{ item.block.end_time|time:"H:i" }} ({{ item.block.duration_minutes }}m)
             </p>
         </div>
     </div>
 
-    <!-- Status Badge -->
-    <div class="shrink-0">
-        <span class="pill pill-inset text-[10px] py-1 px-2.5 font-bold">
-            {{ item.occurrence.get_status_display }}
-        </span>
-    </div>
+    <!-- Status Tag -->
+    <span class="pill pill-inset" style="font-size: 0.68rem; font-weight: 700;">
+        {{ item.occurrence.get_status_display }}
+    </span>
 </div>
 
 {% if swap_summary %}

@@ -2,45 +2,51 @@
       hx-target="{% if block %}#block-row-{{ block.id }}{% else %}#block-list{% endif %}"
       hx-swap="{% if block %}outerHTML{% else %}beforeend{% endif %}"
       @htmx:after-request="if($event.detail.successful) { $dispatch('close-routine-modal'); }"
-      class="space-y-4">
+      style="display: flex; flex-direction: column; gap: 1.15rem;">
     {% csrf_token %}
+    
     <div>
-        <label class="block text-xs font-semibold mb-1">Title</label>
+        <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Title</label>
         {{ form.title }}
-        {% if form.title.errors %}<p class="text-xs text-red-500 mt-1">{{ form.title.errors.0 }}</p>{% endif %}
+        {% if form.title.errors %}<p style="font-size: 0.72rem; color: #ef4444; margin-top: 0.25rem;">{{ form.title.errors.0 }}</p>{% endif %}
     </div>
 
-    <div class="grid grid-cols-2 gap-3">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: center;">
         <div>
-            <label class="block text-xs font-semibold mb-1">Category</label>
+            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Category</label>
             {{ form.category }}
         </div>
-        <div class="flex items-center gap-2 pt-5">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.25rem;">
             {{ form.is_active }}
-            <label class="text-xs font-medium">Active in Routine</label>
+            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-main); cursor: pointer;" for="{{ form.is_active.id_for_label }}">Active in Routine</label>
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-3">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
         <div>
-            <label class="block text-xs font-semibold mb-1">Start Time</label>
+            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Start Time</label>
             {{ form.start_time }}
-            {% if form.start_time.errors %}<p class="text-xs text-red-500 mt-1">{{ form.start_time.errors.0 }}</p>{% endif %}
+            {% if form.start_time.errors %}<p style="font-size: 0.72rem; color: #ef4444; margin-top: 0.25rem;">{{ form.start_time.errors.0 }}</p>{% endif %}
         </div>
         <div>
-            <label class="block text-xs font-semibold mb-1">End Time</label>
+            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">End Time</label>
             {{ form.end_time }}
-            {% if form.end_time.errors %}<p class="text-xs text-red-500 mt-1">{{ form.end_time.errors.0 }}</p>{% endif %}
+            {% if form.end_time.errors %}<p style="font-size: 0.72rem; color: #ef4444; margin-top: 0.25rem;">{{ form.end_time.errors.0 }}</p>{% endif %}
         </div>
     </div>
 
     <div>
-        <label class="block text-xs font-semibold mb-1">Notes (Optional)</label>
+        <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Notes (Optional)</label>
         {{ form.notes }}
     </div>
 
-    <div class="flex justify-end gap-2 pt-2">
-        <button type="button" @click="$dispatch('close-routine-modal')" class="btn btn-secondary text-xs">Cancel</button>
-        <button type="submit" class="btn btn-primary text-xs">Save Block</button>
+    <!-- Action Buttons -->
+    <div style="display: flex; justify-content: flex-end; align-items: center; gap: 0.75rem; margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+        <button type="button" @click="$dispatch('close-routine-modal')" class="action-secondary-btn" style="cursor: pointer;">
+            Cancel
+        </button>
+        <button type="submit" class="action-pill-btn" style="cursor: pointer;">
+            Save Block
+        </button>
     </div>
 </form>

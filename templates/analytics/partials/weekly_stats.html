@@ -1,102 +1,134 @@
 <div id="weekly-stats-container" class="space-y-6">
     <!-- Header with Week Selector -->
-    <div class="flex items-center justify-between">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
         <div>
-            <h1 class="text-2xl font-bold tracking-tight">Weekly Review</h1>
-            <p style="color: var(--text-muted);" class="text-xs">
+            <h1 style="font-size: 1.75rem; font-weight: 900; letter-spacing: -0.02em;">Weekly Review</h1>
+            <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 0.2rem;">
                 {{ metrics.start_of_week|date:"d M" }} - {{ metrics.end_of_week|date:"d M, Y" }}
             </p>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div style="display: flex; gap: 0.5rem;">
             <a hx-get="{% url 'weekly-analytics' %}?date={{ metrics.prev_week|date:'Y-m-d' }}"
                hx-target="#weekly-stats-container"
                hx-push-url="true"
-               class="btn btn-secondary py-1 px-3 text-xs cursor-pointer">
-                &larr; Prev Week
+               class="action-secondary-btn" style="cursor: pointer;">
+                ← Prev Week
             </a>
             <a hx-get="{% url 'weekly-analytics' %}?date={{ metrics.next_week|date:'Y-m-d' }}"
                hx-target="#weekly-stats-container"
                hx-push-url="true"
-               class="btn btn-secondary py-1 px-3 text-xs cursor-pointer">
-                Next Week &rarr;
+               class="action-secondary-btn" style="cursor: pointer;">
+                Next Week →
             </a>
         </div>
     </div>
 
-    <!-- Summary KPI Cards -->
-    <div class="weekly-kpi-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="card">
-            <span class="text-xs block" style="color: var(--text-muted);">Planned Hours</span>
-            <span class="text-2xl font-bold mt-1 block">{{ metrics.total_planned_hours }}h</span>
+    <!-- 4 KPI Metrics Row -->
+    <div class="metrics-row">
+        <div class="metric-card">
+            <div class="metric-label-row">
+                <span class="metric-title">Planned Hours</span>
+                <span>⏱️</span>
+            </div>
+            <div class="metric-val-row">
+                <span class="metric-number">{{ metrics.total_planned_hours }}h</span>
+                <span class="metric-delta-tag">Target</span>
+            </div>
         </div>
-        <div class="card">
-            <span class="text-xs block" style="color: var(--text-muted);">Completed Hours</span>
-            <span class="text-2xl font-bold mt-1 block" style="color: var(--accent);">{{ metrics.total_completed_hours }}h</span>
+
+        <div class="metric-card">
+            <div class="metric-label-row">
+                <span class="metric-title">Completed Hours</span>
+                <span>✓</span>
+            </div>
+            <div class="metric-val-row">
+                <span class="metric-number">{{ metrics.total_completed_hours }}h</span>
+                <span class="metric-delta-tag">{{ metrics.completion_rate }}%</span>
+            </div>
         </div>
-        <div class="card">
-            <span class="text-xs block" style="color: var(--text-muted);">Routine Completion</span>
-            <span class="text-2xl font-bold mt-1 block">{{ metrics.completion_rate }}%</span>
+
+        <div class="metric-card">
+            <div class="metric-label-row">
+                <span class="metric-title">Routine Completion</span>
+                <span>🔥</span>
+            </div>
+            <div class="metric-val-row">
+                <span class="metric-number">{{ metrics.completion_rate }}%</span>
+                <span class="metric-delta-tag">Overall</span>
+            </div>
         </div>
-        <div class="card">
-            <span class="text-xs block" style="color: var(--text-muted);">Habit Consistency</span>
-            <span class="text-2xl font-bold mt-1 block">{{ metrics.habit_rate }}%</span>
+
+        <div class="metric-card">
+            <div class="metric-label-row">
+                <span class="metric-title">Habit Consistency</span>
+                <span>🌱</span>
+            </div>
+            <div class="metric-val-row">
+                <span class="metric-number">{{ metrics.habit_rate }}%</span>
+                <span class="metric-delta-tag">Weekly</span>
+            </div>
         </div>
     </div>
 
-    <!-- Insights Card -->
-    <div class="card flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div class="space-y-1">
-            <span class="text-xs font-semibold uppercase tracking-wider" style="color: var(--text-muted);">Pace & Highlights</span>
-            <p class="text-sm font-medium">
-                Best Momentum: <span class="font-bold text-orange-600">{{ metrics.best_day }}</span>
-            </p>
-            <p class="text-xs text-stone-500">
-                Lightest Execution: <span class="text-stone-700">{{ metrics.weakest_day }}</span>
-            </p>
+    <!-- 2-Column: Day-by-Day Breakdown + Highlights & Category -->
+    <div style="display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 1.25rem;">
+        
+        <!-- Day-by-Day Capsule Overview -->
+        <div class="clean-card">
+            <h2 style="font-size: 1rem; font-weight: 800; margin-bottom: 1.25rem;">Day-by-Day Breakdown</h2>
+            <div class="capsule-bars-container" style="height: 150px;">
+                {% for day in metrics.days_data %}
+                    <div class="capsule-bar-col">
+                        <div style="font-size: 0.7rem; font-weight: 700; color: var(--text-main);">{{ day.completed_hours }}h</div>
+                        <div class="capsule-pill {% if day.completion_rate >= 80 %}hatched{% elif day.completion_rate > 0 %}filled{% endif %}" 
+                             style="height: {% if day.completion_rate > 0 %}{{ day.completion_rate }}%{% else %}12%{% endif %}; min-height: 12px;"
+                             title="{{ day.date|date:'l' }}: {{ day.completed_hours }}h / {{ day.planned_hours }}h"></div>
+                        <span class="capsule-day-label">{{ day.day_name }}</span>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-        <div class="text-xs text-stone-400">
-            Based on completed routines against scheduled blocks.
-        </div>
-    </div>
 
-    <!-- 7-Day Day-by-Day Overview -->
-    <div class="card">
-        <h2 class="text-sm font-bold mb-4">Day-by-Day Breakdown</h2>
-        <div class="grid grid-cols-7 gap-2 text-center">
-            {% for day in metrics.days_data %}
-                <div class="p-2 rounded-lg" style="background-color: var(--surface-muted);">
-                    <span class="text-xs font-bold block">{{ day.day_name }}</span>
-                    <span class="text-[10px] text-stone-400 block mb-2">{{ day.date|date:"d M" }}</span>
-                    
-                    <span class="text-sm font-bold block" style="color: var(--accent);">{{ day.completed_hours }}h</span>
-                    <span class="text-[10px] text-stone-400 block">/ {{ day.planned_hours }}h</span>
-
-                    <div class="w-full h-1.5 rounded-full mt-2" style="background-color: var(--border);">
-                        <div class="h-1.5 rounded-full bg-orange-500" style="width: {{ day.completion_rate }}%;"></div>
+        <!-- Highlights & Categories -->
+        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+            <!-- Best/Weakest Momentum Card -->
+            <div class="clean-card">
+                <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted);">Pace & Highlights</span>
+                <div style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: var(--text-muted);">Best Momentum:</span>
+                        <span style="font-weight: 800; color: var(--accent-primary);">{{ metrics.best_day }}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: var(--text-muted);">Lightest Execution:</span>
+                        <span style="font-weight: 700; color: var(--text-main);">{{ metrics.weakest_day }}</span>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-    </div>
+            </div>
 
-    <!-- Category Distribution -->
-    <div class="card">
-        <h2 class="text-sm font-bold mb-3">Category Distribution</h2>
-        <div class="space-y-3">
-            {% for cat in metrics.category_summary %}
-                <div>
-                    <div class="flex justify-between text-xs font-medium mb-1">
-                        <span>{{ cat.name }}</span>
-                        <span>{{ cat.completed_hours }}h / {{ cat.planned_hours }}h ({{ cat.rate }}%)</span>
-                    </div>
-                    <div class="w-full h-2 rounded-full" style="background-color: var(--surface-muted);">
-                        <div class="h-2 rounded-full bg-orange-500" style="width: {{ cat.rate }}%;"></div>
-                    </div>
+            <!-- Category Breakdown -->
+            <div class="clean-card">
+                <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.75rem; display: block;">
+                    Category Distribution
+                </span>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    {% for cat in metrics.category_summary %}
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 700; margin-bottom: 0.25rem;">
+                                <span>{{ cat.name }}</span>
+                                <span style="color: var(--text-muted);">{{ cat.completed_hours }}h / {{ cat.planned_hours }}h ({{ cat.rate }}%)</span>
+                            </div>
+                            <div class="neu-sunken" style="padding: 2px; height: 10px; border-radius: var(--radius-full);">
+                                <div style="height: 100%; border-radius: var(--radius-full); background: var(--accent-primary); width: {{ cat.rate }}%;"></div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p style="font-size: 0.78rem; color: var(--text-muted);">No category data recorded for this week.</p>
+                    {% endfor %}
                 </div>
-            {% empty %}
-                <p class="text-xs text-stone-400">No scheduled blocks categorized this week.</p>
-            {% endfor %}
+            </div>
         </div>
+
     </div>
 </div>

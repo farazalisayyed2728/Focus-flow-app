@@ -1,78 +1,61 @@
-<div
-  id="habit-card-{{ habit.id }}"
-  class="card flex flex-col justify-between gap-4 {% if habit.is_paused %}opacity-60 bg-stone-50/50{% endif %}"
->
-  <div class="flex items-start justify-between">
-    <div>
-      <div class="flex items-center gap-2">
-        <h3 class="font-bold text-base">{{ habit.name }}</h3>
-        <span class="pill text-xs">{{ habit.category }}</span>
-        {% if habit.is_paused %}
-        <span class="pill text-xs">Paused</span>
-        {% endif %}
-      </div>
-      {% if habit.description %}
-      <p class="text-xs text-stone-500 mt-1">{{ habit.description }}</p>
-      {% endif %}
+<div id="habit-card-{{ habit.id }}" class="clean-card" style="display: flex; flex-direction: column; justify-content: space-between; gap: 1.25rem; {% if habit.is_paused %}opacity: 0.6;{% endif %}">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <h3 style="font-size: 1.05rem; font-weight: 800;">{{ habit.name }}</h3>
+                <span class="metric-delta-tag" style="font-size: 0.65rem;">{{ habit.category }}</span>
+                {% if habit.is_paused %}
+                    <span class="pill" style="font-size: 0.65rem;">Paused</span>
+                {% endif %}
+            </div>
+            {% if habit.description %}
+                <p style="font-size: 0.775rem; color: var(--text-muted); margin-top: 0.35rem;">{{ habit.description }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Completion Toggle Circle -->
+        <button hx-post="{% url 'habit-toggle' habit.id %}"
+                hx-target="#habit-card-{{ habit.id }}"
+                hx-swap="outerHTML"
+                class="tracker-btn-circle"
+                style="width: 36px; height: 36px; {% if today_completed %}background: var(--accent-primary); color: #fff;{% else %}background: var(--bg-sunken); color: var(--text-main); border: 1px solid var(--border-color);{% endif %}"
+                title="Mark completed today">
+            {% if today_completed %}✓{% endif %}
+        </button>
     </div>
 
-    <!-- Quick Check Circle -->
-    <button
-      hx-post="{% url 'habit-toggle' habit.id %}"
-      hx-target="#habit-card-{{ habit.id }}"
-      hx-swap="outerHTML"
-      class="w-8 h-8 rounded-full flex items-center justify-center border transition-colors cursor-pointer"
-      style="{% if today_completed %}background-color: var(--accent); border-color: var(--accent); color: white;{% else %}border-color: var(--border);{% endif %}"
-      title="Mark completed for today"
-    >
-      {% if today_completed %}✓{% endif %}
-    </button>
-  </div>
+    <!-- 7-Day Dot Matrix & Streak -->
+    <div style="border-top: 1px solid var(--border-color); padding-top: 0.85rem; display: flex; justify-content: space-between; align-items: center;">
+        <div style="font-size: 0.8rem; font-weight: 800; display: flex; align-items: center; gap: 0.3rem;">
+            <span>🔥</span>
+            <span style="color: var(--accent-primary);">{{ streak }}</span>
+            <span style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">day streak</span>
+        </div>
 
-  <!-- Streak & Past 7 Days View -->
-  <div
-    class="flex items-center justify-between pt-2 border-t"
-    style="border-color: var(--border)"
-  >
-    <div class="flex items-center gap-1.5 text-xs">
-      <span class="font-bold text-orange-600">🔥 {{ streak }}</span>
-      <span style="color: var(--text-muted)">day streak</span>
+        <div style="display: flex; gap: 0.35rem; align-items: center;">
+            {% for d in history %}
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <span style="font-size: 9px; color: var(--text-subtle); font-weight: 700; margin-bottom: 2px;">{{ d.day_name }}</span>
+                    <span style="width: 14px; height: 14px; border-radius: 50%; display: block; {% if d.status == 'completed' %}background: var(--accent-primary);{% else %}background: var(--bg-sunken); border: 1px solid var(--border-color);{% endif %} {% if d.is_today %}box-shadow: 0 0 0 2px var(--accent-glow);{% endif %}"></span>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 
-    
-    <!-- 7-day indicators placed in a horizontal flex row -->
-    <div class="flex items-center gap-2">
-      {% for d in history %}
-      <div class="flex flex-col items-center">
-        <span class="text-[10px] text-stone-400 font-bold mb-1"
-          >{{ d.day_name }}</span
-        >
-        <span
-          class="w-4 h-4 rounded-full flex items-center justify-center {% if d.status == 'completed' %}bg-orange-500 shadow-sm{% else %}bg-stone-300 dark:bg-stone-700{% endif %} {% if d.is_today %}ring-2 ring-orange-500 ring-offset-1{% endif %}"
-        ></span>
-      </div>
-      {% endfor %}
+    <!-- Actions Toolbar -->
+    <div style="display: flex; justify-content: flex-end; gap: 0.5rem; font-size: 0.75rem;">
+        <button hx-post="{% url 'habit-pause' habit.id %}"
+                hx-target="#habit-card-{{ habit.id }}"
+                hx-swap="outerHTML"
+                class="action-secondary-btn" style="padding: 0.25rem 0.65rem; font-size: 0.7rem;">
+            {% if habit.is_paused %}Resume{% else %}Pause{% endif %}
+        </button>
+        <button hx-post="{% url 'habit-archive' habit.id %}"
+                hx-target="#habit-card-{{ habit.id }}"
+                hx-swap="outerHTML"
+                hx-confirm="Archive this habit?"
+                class="action-secondary-btn" style="padding: 0.25rem 0.65rem; font-size: 0.7rem; color: #ef4444;">
+            Archive
+        </button>
     </div>
-  </div>
-
-  <!-- Actions (Pause / Archive) -->
-  <div class="flex justify-end gap-2 text-xs">
-    <button
-      hx-post="{% url 'habit-pause' habit.id %}"
-      hx-target="#habit-card-{{ habit.id }}"
-      hx-swap="outerHTML"
-      class="text-stone-500 hover:text-stone-800"
-    >
-      {% if habit.is_paused %}Resume{% else %}Pause{% endif %}
-    </button>
-    <button
-      hx-post="{% url 'habit-archive' habit.id %}"
-      hx-target="#habit-card-{{ habit.id }}"
-      hx-swap="outerHTML"
-      hx-confirm="Archive this habit? History will be preserved."
-      class="text-red-500 hover:text-red-700"
-    >
-      Archive
-    </button>
-  </div>
 </div>

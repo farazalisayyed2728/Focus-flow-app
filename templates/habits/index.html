@@ -1,50 +1,53 @@
 {% extends "base.html" %}
 
-{% block title %}Habits — FocusFlow{% endblock %}
+{% block title %}Daily Habits — FocusFlow{% endblock %}
 
 {% block content %}
-<div class="space-y-6 max-w-4xl mx-auto" x-data="habitModal">
-    <div class="flex items-center justify-between">
+<div class="space-y-6" x-data="{ openModal: false }" @close-habit-modal.window="openModal = false">
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
         <div>
-            <h1 class="text-2xl font-bold tracking-tight">Daily Habits</h1>
-            <p style="color: var(--text-muted);" class="text-xs">
-                Track consistency and build long-term momentum.
-            </p>
+            <h1 style="font-size: 1.75rem; font-weight: 900; letter-spacing: -0.02em;">Daily Habits</h1>
+            <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 0.2rem;">Track consistency and build long-term momentum.</p>
         </div>
 
-        <button
-            type="button"
-            hx-get="{% url 'habit-create' %}"
-            hx-target="#modal-body"
-            @click="openModal()"
-            class="btn btn-primary text-xs"
-        >
-            + New Habit
+        <button type="button"
+                hx-get="{% url 'habit-create' %}"
+                hx-target="#modal-body"
+                @click="openModal = true"
+                class="action-pill-btn">
+            <span>+</span> New Habit
         </button>
     </div>
 
-    <div id="habit-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Habit Cards Grid -->
+    <div id="habit-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem;">
         {% for card in habits_data %}
             {% include "habits/partials/habit_card.html" with habit=card.habit today_completed=card.today_completed streak=card.streak history=card.history %}
         {% empty %}
-            <div class="card col-span-full text-center py-10" style="color: var(--text-muted);">
-                <p class="text-sm font-medium">No habits configured yet.</p>
-                <p class="text-xs mt-1">Start with one habit you can repeat every day.</p>
+            <div class="clean-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem 1.5rem;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌱</div>
+                <h3 style="font-size: 1.1rem; font-weight: 800;">No habits configured yet</h3>
+                <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 0.35rem; margin-bottom: 1.25rem;">Start with one habit you can repeat every day.</p>
+                <button type="button"
+                        hx-get="{% url 'habit-create' %}"
+                        hx-target="#modal-body"
+                        @click="openModal = true"
+                        class="action-pill-btn">
+                    Create Your First Habit
+                </button>
             </div>
         {% endfor %}
     </div>
 
-    <div x-show="isOpen" x-cloak class="modal-overlay">
-        <div class="modal-dialog-card" @click.away="closeModal()">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color);">
-                <h2 style="font-size: 1.1rem; font-weight: 800;">Configure Habit</h2>
-                <button
-                    type="button"
-                    @click="closeModal()"
-                    style="background: none; border: none; font-size: 1.25rem; color: var(--text-muted); cursor: pointer;"
-                >
-                    &times;
-                </button>
+    <!-- Clean Modal Overlay -->
+    <div x-show="openModal" 
+         x-cloak 
+         class="modal-overlay">
+        <div class="modal-dialog-card" @click.away="openModal = false">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color);">
+                <h2 style="font-size: 1.15rem; font-weight: 800;">New Habit</h2>
+                <button type="button" @click="openModal = false" style="background: none; border: none; font-size: 1.25rem; color: var(--text-muted); cursor: pointer;">&times;</button>
             </div>
             <div id="modal-body"></div>
         </div>

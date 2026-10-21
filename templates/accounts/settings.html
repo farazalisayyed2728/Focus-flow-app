@@ -3,78 +3,187 @@
 {% block title %}Settings & Preferences — FocusFlow{% endblock %}
 
 {% block content %}
-<div class="clean-card max-w-3xl mx-auto space-y-6">
+<div class="space-y-6 max-w-4xl mx-auto" x-data="{ tab: 'profile' }">
+    <!-- Header -->
     <div>
-        <h1 style="font-size: 1.5rem; font-weight: 900; letter-spacing: -0.02em;">Appearance & Settings</h1>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
-            The accent re-tints the whole workspace and is remembered on this device (00:25).
+        <h1 style="font-size: 1.75rem; font-weight: 900; letter-spacing: -0.02em;">Settings & Preferences</h1>
+        <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Configure your workspace appearance, routine preferences, alerts, and personal data.
         </p>
     </div>
 
-    <!-- Theme Accent Palette Picker (Video 00:25) -->
-    <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
-        <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">
-            Workspace Accent Color
-        </span>
-        
-        <div style="display: flex; gap: 1rem; margin-top: 0.75rem; flex-wrap: wrap;">
-            <!-- Forest -->
-            <button type="button" 
-                    @click="$dispatch('set-accent', { accent: 'forest' })"
-                    class="action-secondary-btn"
-                    style="gap: 0.6rem;">
-                <span style="width: 14px; height: 14px; border-radius: 50%; background: #1b5e3f;"></span>
-                <span>Forest</span>
-            </button>
-
-            <!-- Ocean -->
-            <button type="button" 
-                    @click="$dispatch('set-accent', { accent: 'ocean' })"
-                    class="action-secondary-btn"
-                    style="gap: 0.6rem;">
-                <span style="width: 14px; height: 14px; border-radius: 50%; background: #2563eb;"></span>
-                <span>Ocean</span>
-            </button>
-
-            <!-- Plum -->
-            <button type="button" 
-                    @click="$dispatch('set-accent', { accent: 'plum' })"
-                    class="action-secondary-btn"
-                    style="gap: 0.6rem;">
-                <span style="width: 14px; height: 14px; border-radius: 50%; background: #7c3aed;"></span>
-                <span>Plum</span>
-            </button>
-
-            <!-- Ember -->
-            <button type="button" 
-                    @click="$dispatch('set-accent', { accent: 'ember' })"
-                    class="action-secondary-btn"
-                    style="gap: 0.6rem;">
-                <span style="width: 14px; height: 14px; border-radius: 50%; background: #ea580c;"></span>
-                <span>Ember</span>
-            </button>
-        </div>
+    <!-- Navigation Tabs -->
+    <div style="display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+        <button type="button" @click="tab = 'profile'" 
+                :class="tab === 'profile' ? 'action-pill-btn' : 'action-secondary-btn'" 
+                style="cursor: pointer;">
+            Profile & Appearance
+        </button>
+        <button type="button" @click="tab = 'notifications'" 
+                :class="tab === 'notifications' ? 'action-pill-btn' : 'action-secondary-btn'" 
+                style="cursor: pointer;">
+            Notifications
+        </button>
+        <button type="button" @click="tab = 'data'" 
+                :class="tab === 'data' ? 'action-pill-btn' : 'action-secondary-btn'" 
+                style="cursor: pointer;">
+            Data & Privacy
+        </button>
     </div>
 
-    <!-- Profile & Clock Settings Form -->
-    <form method="post" style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="update_profile">
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-            <div>
-                <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Display Name</label>
-                {{ profile_form.display_name }}
-            </div>
-            <div>
-                <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Timezone</label>
-                {{ profile_form.timezone }}
+    <!-- Tab 1: Profile & Appearance -->
+    <div x-show="tab === 'profile'" class="clean-card space-y-6">
+        <!-- Accent Picker -->
+        <div>
+            <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block;">
+                Workspace Accent Color
+            </span>
+            <p style="font-size: 0.78rem; color: var(--text-subtle); margin-top: 0.2rem;">
+                The accent re-tints the whole workspace and is remembered on this device.
+            </p>
+            
+            <div style="display: flex; gap: 0.75rem; margin-top: 0.75rem; flex-wrap: wrap;">
+                <button type="button" @click="$dispatch('set-accent', { accent: 'forest' })" class="action-secondary-btn" style="gap: 0.5rem; cursor: pointer;">
+                    <span style="width: 12px; height: 12px; border-radius: 50%; background: #1b5e3f;"></span>
+                    <span>Forest</span>
+                </button>
+                <button type="button" @click="$dispatch('set-accent', { accent: 'ocean' })" class="action-secondary-btn" style="gap: 0.5rem; cursor: pointer;">
+                    <span style="width: 12px; height: 12px; border-radius: 50%; background: #2563eb;"></span>
+                    <span>Ocean</span>
+                </button>
+                <button type="button" @click="$dispatch('set-accent', { accent: 'plum' })" class="action-secondary-btn" style="gap: 0.5rem; cursor: pointer;">
+                    <span style="width: 12px; height: 12px; border-radius: 50%; background: #7c3aed;"></span>
+                    <span>Plum</span>
+                </button>
+                <button type="button" @click="$dispatch('set-accent', { accent: 'ember' })" class="action-secondary-btn" style="gap: 0.5rem; cursor: pointer;">
+                    <span style="width: 12px; height: 12px; border-radius: 50%; background: #ea580c;"></span>
+                    <span>Ember</span>
+                </button>
             </div>
         </div>
 
-        <button type="submit" class="action-pill-btn" style="align-self: flex-start; margin-top: 0.5rem;">
-            Save Settings
-        </button>
-    </form>
+        <!-- Profile Form -->
+        <form method="post" style="border-top: 1px solid var(--border-color); padding-top: 1.25rem; display: flex; flex-direction: column; gap: 1.15rem;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="update_profile">
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Display Name</label>
+                    {{ profile_form.display_name }}
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Timezone</label>
+                    {{ profile_form.timezone }}
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Theme Preference</label>
+                    {{ profile_form.theme }}
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Clock Format</label>
+                    {{ profile_form.clock_format }}
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Week Starts On</label>
+                    {{ profile_form.week_start }}
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Typical Wake Time</label>
+                    {{ profile_form.typical_wake_time }}
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Typical Sleep Time</label>
+                    {{ profile_form.typical_sleep_time }}
+                </div>
+            </div>
+
+            <div>
+                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem;">Main Focus / Goal</label>
+                {{ profile_form.main_goal }}
+            </div>
+
+            <button type="submit" class="action-pill-btn" style="align-self: flex-start; margin-top: 0.5rem; cursor: pointer;">
+                Save Profile Settings
+            </button>
+        </form>
+    </div>
+
+    <!-- Tab 2: Notification Settings -->
+    <div x-show="tab === 'notifications'" x-cloak class="clean-card space-y-4">
+        <h2 style="font-size: 1.15rem; font-weight: 800;">Notification Preferences</h2>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Manage when and how FocusFlow sends you reminders[cite: 1, 2].</p>
+
+        <form method="post" style="display: flex; flex-direction: column; gap: 1rem; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="update_notifications">
+
+            <label style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; font-weight: 600; cursor: pointer;">
+                {{ notif_form.in_app_enabled }}
+                <span>Enable In-App Notifications</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; font-weight: 600; cursor: pointer;">
+                {{ notif_form.routine_reminders_enabled }}
+                <span>Routine Block Reminders</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; font-weight: 600; cursor: pointer;">
+                {{ notif_form.habit_reminders_enabled }}
+                <span>Habit Reminders</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; font-weight: 600; cursor: pointer;">
+                {{ notif_form.daily_start_reminder_enabled }}
+                <span>Daily Morning Start Reminder</span>
+            </label>
+
+            <button type="submit" class="action-pill-btn" style="align-self: flex-start; margin-top: 0.5rem; cursor: pointer;">
+                Save Notification Preferences
+            </button>
+        </form>
+    </div>
+
+    <!-- Tab 3: Data Export & Privacy -->
+    <div x-show="tab === 'data'" x-cloak style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="clean-card" style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <h2 style="font-size: 1.15rem; font-weight: 800;">Export Your Data</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">
+                Download your complete activity history, routines, and habits in JSON or CSV formats[cite: 1, 4].
+            </p>
+            <div style="display: flex; gap: 0.75rem; margin-top: 0.25rem;">
+                <a href="{% url 'settings-export' %}" class="action-pill-btn">
+                    <span>↓</span> Export JSON Archive
+                </a>
+                <a href="{% url 'settings-export-csv' %}" class="action-secondary-btn">
+                    <span>↓</span> Export Tasks CSV
+                </a>
+            </div>
+        </div>
+
+        <div class="clean-card" style="border: 1px solid rgba(239, 68, 68, 0.4);">
+            <h2 style="font-size: 1.15rem; font-weight: 800; color: #ef4444;">Danger Zone: Delete Account</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
+                Permanently delete your FocusFlow account and all associated data[cite: 1, 4]. This cannot be undone.
+            </p>
+
+            <form method="post" style="margin-top: 1rem; max-width: 320px; display: flex; flex-direction: column; gap: 0.75rem;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete_account">
+                <div>
+                    {{ delete_form.confirmation }}
+                    {% if delete_form.confirmation.errors %}
+                        <p style="font-size: 0.72rem; color: #ef4444; margin-top: 0.25rem;">{{ delete_form.confirmation.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <button type="submit" class="action-secondary-btn" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4); cursor: pointer;">
+                    Permanently Delete Account
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}

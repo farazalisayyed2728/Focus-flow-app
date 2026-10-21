@@ -640,3 +640,42 @@ input[type="checkbox"] {
   accent-color: var(--accent-primary);
   cursor: pointer;
 }
+
+/* Clean Form Controls Override */
+.modal-dialog-card input[type="text"],
+.modal-dialog-card input[type="time"],
+.modal-dialog-card input[type="number"],
+.modal-dialog-card select,
+.modal-dialog-card textarea {
+  width: 100% !important;
+  background: var(--bg-sunken) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 0.65rem 0.9rem !important;
+  font-family: inherit !important;
+  font-size: 0.85rem !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  transition: all 0.15s ease;
+}
+
+.modal-dialog-card input:focus,
+.modal-dialog-card select:focus,
+.modal-dialog-card textarea:focus {
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 0 2px var(--accent-glow) !important;
+}
+
+.modal-dialog-card textarea {
+  min-height: 85px;
+  resize: vertical;
+}
+
+.modal-dialog-card input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  accent-color: var(--accent-primary);
+  cursor: pointer;
+}

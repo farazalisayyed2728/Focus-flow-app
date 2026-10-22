@@ -90,7 +90,6 @@ div.breadcrumbs a {
   box-shadow: var(--neu-raised) !important;
   border: 1px solid var(--admin-border) !important;
   margin: 1.5rem !important;
-  overflow: hidden !important;
 }
 
 .module h2, .module caption {
@@ -175,12 +174,12 @@ input:focus, textarea:focus, select:focus {
   align-items: center !important;
 }
 
-.button:hover, input[type="submit"]:hover, .object-tools a:hover {
+.button:hover, input[type="submit"]:hover, input[type="button"]:hover, .object-tools a:hover {
   background: var(--admin-accent-hover) !important;
   transform: translateY(-1px) !important;
 }
 
-.button:active, input[type="submit"]:active {
+.button:active, input[type="submit"]:active, input[type="button"]:active {
   box-shadow: var(--neu-inset) !important;
   transform: translateY(1px) !important;
 }
@@ -204,4 +203,105 @@ input:focus, textarea:focus, select:focus {
 
 #changelist-filter a {
   color: var(--admin-text-muted) !important;
+}
+
+/* ========================================================
+   HIGH-CONTRAST FORM CONTROLS (Fixes Invisible Input Text)
+   ======================================================== */
+
+/* Enforce bright, readable text inside every admin input & select */
+#content-main input[type="text"],
+#content-main input[type="password"],
+#content-main input[type="email"],
+#content-main input[type="url"],
+#content-main input[type="number"],
+#content-main input[type="date"],
+#content-main input[type="time"],
+#content-main input[type="search"],
+#content-main input[type="tel"],
+#content-main input[type="datetime-local"],
+#content-main input[type="month"],
+#content-main input[type="week"],
+#content-main input.vDateField,
+#content-main input.vTimeField,
+#content-main select,
+#content-main textarea {
+  background-color: #20232a !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.5) !important;
+  outline: none !important;
+  opacity: 1 !important;
+}
+
+/* Active focus state */
+#content-main input:focus,
+#content-main select:focus,
+#content-main textarea:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25) !important;
+}
+
+/* Fix dropdown options list */
+#content-main select option {
+  background-color: #20232a !important;
+  color: #ffffff !important;
+  padding: 8px !important;
+}
+
+/* Keep native choice controls usable while matching the accent color. */
+#content-main input[type="checkbox"],
+#content-main input[type="radio"] {
+  accent-color: var(--admin-accent) !important;
+}
+
+#content-main input::placeholder,
+#content-main textarea::placeholder {
+  color: var(--admin-text-muted) !important;
+  opacity: 1 !important;
+}
+
+#content-main input:disabled,
+#content-main select:disabled,
+#content-main textarea:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.65 !important;
+}
+
+/* Field labels and help text */
+.form-row label,
+.form-row .help,
+p.datetime {
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+/* Calendar & clock shortcut links ('Today | [icon]', 'Now | [icon]') */
+.datetimeshortcuts,
+.datetimeshortcuts a {
+  color: #38bdf8 !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  text-decoration: none !important;
+}
+
+.datetimeshortcuts a:hover {
+  text-decoration: underline !important;
+}
+
+/* Django Form Card container */
+.form-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  padding: 14px 0 !important;
+}
+
+/* Readonly fields & disabled fields */
+.readonly {
+  color: #cbd5e1 !important;
+  font-weight: 600 !important;
 }

@@ -2,7 +2,7 @@ from django.contrib.auth import login, logout,authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render
-from django.tasks import Task
+from apps.tracking.models import Task
 
 from .forms import OnboardingForm, SignUpForm
 

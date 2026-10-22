@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
+from apps.tracking.models import Task
 from apps.tracking.services import get_today_timeline_data, toggle_occurrence_status
 
 
@@ -13,9 +14,17 @@ def dashboard_view(request):
     if request.headers.get('HX-Request') and request.GET.get('filter_update'):
         return render(request, 'dashboard/partials/timeline_list.html', {'timeline_data': data})
 
+    task_id = request.GET.get('task')
+    selected_task = (
+        get_object_or_404(Task, id=task_id, user=request.user)
+        if task_id
+        else None
+    )
+
     return render(request, 'dashboard/index.html', {
         'timeline_data': data,
         'user': request.user,
+        'selected_task': selected_task,
     })
 
 @login_required

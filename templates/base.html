@@ -32,8 +32,22 @@
                 <header class="top-header">
                     <div class="search-box">
                         <span>🔍</span>
-                        <input type="text" class="search-input" placeholder="Search tasks, routines..." aria-label="Search">
-                        <span class="kbd-shortcut">⌘K</span>
+                        <input type="search"
+                               id="global-search-input"
+                               name="q"
+                               class="search-input"
+                               placeholder="Search tasks, routines, habits..."
+                               aria-label="Search tasks, routines, and habits"
+                               aria-controls="search-results-dropdown"
+                               aria-autocomplete="list"
+                               hx-get="{% url 'global-search' %}"
+                               hx-trigger="keyup changed delay:300ms"
+                               hx-target="#search-results-dropdown"
+                               hx-indicator="#global-search-indicator"
+                               autocomplete="off">
+                        <span id="global-search-indicator" class="search-indicator" aria-hidden="true">…</span>
+                        <span id="search-shortcut-label" class="kbd-shortcut">Ctrl K</span>
+                        <div id="search-results-dropdown"></div>
                     </div>
 
                     <div class="header-user-profile">
@@ -84,5 +98,43 @@
     </div>
 
     {% include "components/toast.html" %}
+    <script>
+        (() => {
+            const searchInput = document.getElementById("global-search-input");
+            const results = document.getElementById("search-results-dropdown");
+
+            if (!searchInput || !results) return;
+
+            const shortcutLabel = document.getElementById("search-shortcut-label");
+            if (shortcutLabel && navigator.platform.toLowerCase().includes("mac")) {
+                shortcutLabel.textContent = "⌘K";
+            }
+
+            window.addEventListener("keydown", (event) => {
+                if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+                    event.preventDefault();
+                    searchInput.focus();
+                    searchInput.select();
+                }
+            });
+
+            searchInput.addEventListener("keydown", (event) => {
+                if (event.key === "Escape") {
+                    results.replaceChildren();
+                    searchInput.blur();
+                } else if (event.key === "Enter") {
+                    const firstResult = results.querySelector(".search-item");
+                    if (firstResult) {
+                        event.preventDefault();
+                        window.location.assign(firstResult.href);
+                    }
+                }
+            });
+
+            document.addEventListener("click", (event) => {
+                if (!event.target.closest(".search-box")) results.replaceChildren();
+            });
+        })();
+    </script>
 </body>
 </html>

@@ -4,6 +4,22 @@
 
 {% block content %}
 <div class="space-y-6">
+    {% if selected_task %}
+        <section id="task-{{ selected_task.id }}" class="clean-card" tabindex="-1" aria-label="Selected task">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+                <div>
+                    <p style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-subtle);">Task</p>
+                    <h2 style="font-size: 1.15rem; font-weight: 800; margin-top: 0.25rem;">{{ selected_task.title }}</h2>
+                    {% if selected_task.description %}
+                        <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 0.35rem;">{{ selected_task.description }}</p>
+                    {% endif %}
+                </div>
+                <span class="metric-delta-tag">{{ selected_task.get_status_display }}</span>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem;">Due {{ selected_task.due_date|date:"M j, Y" }}</p>
+        </section>
+    {% endif %}
+
     <!-- Section Header & Quick Actions -->
     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
         <div>

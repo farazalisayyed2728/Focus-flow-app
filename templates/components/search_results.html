@@ -1,0 +1,41 @@
+<div class="search-dropdown-menu clean-card" role="listbox" aria-label="Search results">
+    {% if not tasks and not blocks and not habits %}
+        <p class="search-empty">
+            {% if query|length < 2 %}
+                Type at least 2 characters to search.
+            {% else %}
+                No results found for "{{ query }}"
+            {% endif %}
+        </p>
+    {% else %}
+        {% if tasks %}
+            <span class="search-result-heading">Tasks</span>
+            {% for task in tasks %}
+                <a href="{% url 'dashboard' %}?task={{ task.id }}#task-{{ task.id }}" class="search-item" role="option">
+                    <span>✓ {{ task.title }}</span>
+                    <span class="search-result-meta">{{ task.get_status_display }}</span>
+                </a>
+            {% endfor %}
+        {% endif %}
+
+        {% if blocks %}
+            <span class="search-result-heading">Routines</span>
+            {% for block in blocks %}
+                <a href="{% url 'routine-builder' %}#block-row-{{ block.id }}" class="search-item" role="option">
+                    <span>⏱️ {{ block.title }}</span>
+                    <span class="search-result-meta">{{ block.category }} · {{ block.start_time|time:"H:i" }}</span>
+                </a>
+            {% endfor %}
+        {% endif %}
+
+        {% if habits %}
+            <span class="search-result-heading">Habits</span>
+            {% for habit in habits %}
+                <a href="{% url 'habit-list' %}#habit-card-{{ habit.id }}" class="search-item" role="option">
+                    <span>🌱 {{ habit.name }}</span>
+                    <span class="search-result-meta">{{ habit.category }}</span>
+                </a>
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+</div>

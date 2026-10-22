@@ -7,14 +7,43 @@ from django.core.cache import cache
 from django.http import JsonResponse
 from django.views import View
 from django.db import DatabaseError, connection
+from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from redis.exceptions import RedisError
 from django.http import HttpResponse, FileResponse
 from django.conf import settings
 import os
 
+from apps.habits.models import Habit
+from apps.routines.models import RoutineBlock
+from apps.tracking.models import Task
+
 
 logger = logging.getLogger(__name__)
+
+
+@login_required
+def global_search_view(request):
+    query = request.GET.get("q", "").strip()
+    results = {"tasks": [], "blocks": [], "habits": [], "query": query}
+
+    if len(query) >= 2:
+        results["tasks"] = Task.objects.filter(
+            Q(title__icontains=query) | Q(description__icontains=query),
+            user=request.user,
+        )[:5]
+        results["blocks"] = RoutineBlock.objects.filter(
+            Q(title__icontains=query) | Q(category__icontains=query),
+            routine__user=request.user,
+        )[:5]
+        results["habits"] = Habit.objects.filter(
+            Q(name__icontains=query) | Q(category__icontains=query),
+            user=request.user,
+            is_archived=False,
+        )[:5]
+
+    return render(request, "components/search_results.html", results)
 
 
 def shell_preview(request):
